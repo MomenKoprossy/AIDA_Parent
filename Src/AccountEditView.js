@@ -12,21 +12,20 @@ import {
   Text,
   Form,
   Item,
-  Label,
-  H1
+  Label
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 
-export class SignUpView extends React.Component {
+export default class AccountEditView extends React.Component {
   state = {
     fname: "",
     lname: "",
     email: "",
     country: "",
-    gender: "",
     dob: "",
+    opw: "",
     pw: "",
     cpw: ""
   };
@@ -40,13 +39,12 @@ export class SignUpView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Sign Up</Title>
+            <Title>Edit</Title>
           </Body>
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
             <Form>
-              <H1>Guardian Details ONLY!</H1>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
                 <Input
@@ -68,8 +66,8 @@ export class SignUpView extends React.Component {
                 <Input
                   type="email-address"
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ email: value })}
+                  editable={false}
+                  value={this.state.email}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -81,14 +79,6 @@ export class SignUpView extends React.Component {
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
-                <Label>Gender:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ gender: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
                 <Label>Date of Birth:</Label>
                 <Input
                   style={styles.input}
@@ -97,7 +87,16 @@ export class SignUpView extends React.Component {
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
-                <Label>Password:</Label>
+                <Label>Old Password:</Label>
+                <Input
+                  password
+                  style={styles.input}
+                  editable={true}
+                  onChangeText={value => this.setState({ opw: value })}
+                />
+              </Item>
+              <Item fixedLabel style={styles.item}>
+                <Label>New Password:</Label>
                 <Input
                   password
                   style={styles.input}
@@ -124,7 +123,7 @@ export class SignUpView extends React.Component {
               }}
             >
               <Icon name="checkmark-circle-outline" />
-              <Text>Sign Up!</Text>
+              <Text>Confrim</Text>
             </Button>
           </ScrollView>
         </Content>

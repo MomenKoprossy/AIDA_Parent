@@ -91,6 +91,16 @@ export default class DiagnosisHomeView extends React.Component {
         <FloatingAction
           actions={[
             {
+              text: "Child List",
+              name: "c",
+              color: "#c23fc4"
+            },
+            {
+              text: "Account Details",
+              name: "d",
+              color: "#c23fc4"
+            },
+            {
               text: "Questionnaire",
               name: "q",
               color: "#c23fc4"
@@ -109,6 +119,8 @@ export default class DiagnosisHomeView extends React.Component {
           onPressItem={name => {
             if (name == "q") this.props.navigation.navigate("Questionnaire");
             else if (name == "v") this.props.navigation.navigate("Upload");
+            else if (name == "c") this.props.navigation.navigate("CList");
+            else if (name == "d") this.props.navigation.navigate("Details");
             else if (name == "f")
               alert("Visit Our Website to use this feature!");
           }}

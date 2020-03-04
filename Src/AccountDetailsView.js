@@ -12,23 +12,19 @@ import {
   Text,
   Form,
   Item,
-  Label,
-  H1
+  Label
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 
-export class SignUpView extends React.Component {
+export default class AccountDetailsView extends React.Component {
   state = {
     fname: "",
     lname: "",
     email: "",
     country: "",
-    gender: "",
-    dob: "",
-    pw: "",
-    cpw: ""
+    age: ""
   };
   render() {
     return (
@@ -40,27 +36,26 @@ export class SignUpView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Sign Up</Title>
+            <Title>Account Details</Title>
           </Body>
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
             <Form>
-              <H1>Guardian Details ONLY!</H1>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
                 <Input
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ fname: value })}
+                  editable={false}
+                  value={this.state.fname}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
                 <Label>Last Name:</Label>
                 <Input
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ lname: value })}
+                  editable={false}
+                  value={this.state.lname}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -68,50 +63,24 @@ export class SignUpView extends React.Component {
                 <Input
                   type="email-address"
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ email: value })}
+                  editable={false}
+                  value={this.state.email}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
                 <Label>Country:</Label>
                 <Input
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ country: value })}
+                  editable={false}
+                  value={this.state.country}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
-                <Label>Gender:</Label>
+                <Label>Age:</Label>
                 <Input
                   style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ gender: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Date of Birth:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ email: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ pw: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Confirm Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ cpw: value })}
+                  editable={false}
+                  value={this.state.age}
                 />
               </Item>
             </Form>
@@ -122,9 +91,10 @@ export class SignUpView extends React.Component {
                 justifyContent: "center",
                 alignSelf: "center"
               }}
+              onPress={() => this.props.navigation.navigate("Edit")}
             >
-              <Icon name="checkmark-circle-outline" />
-              <Text>Sign Up!</Text>
+              <Icon name="create" />
+              <Text>Edit</Text>
             </Button>
           </ScrollView>
         </Content>
