@@ -103,7 +103,7 @@ export class LoginView extends React.Component {
                   style={{ height: 48 }}
                   onPress={() => this.props.navigation.navigate("SignUp")}
                 >
-                  SignUp
+                  Sign Up
                 </Button>
               </Block>
             </Block>

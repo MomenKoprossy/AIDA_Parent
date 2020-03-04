@@ -12,23 +12,19 @@ import {
   Text,
   Form,
   Item,
-  Label,
-  H1
+  Label
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 
-export class SignUpView extends React.Component {
+export default class ChildAddView extends React.Component {
   state = {
     fname: "",
     lname: "",
-    email: "",
     country: "",
     gender: "",
-    dob: "",
-    pw: "",
-    cpw: ""
+    dob: ""
   };
   render() {
     return (
@@ -46,7 +42,6 @@ export class SignUpView extends React.Component {
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
             <Form>
-              <H1>Guardian Details ONLY!</H1>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
                 <Input
@@ -61,15 +56,6 @@ export class SignUpView extends React.Component {
                   style={styles.input}
                   editable={true}
                   onChangeText={value => this.setState({ lname: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Email:</Label>
-                <Input
-                  type="email-address"
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ email: value })}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -96,24 +82,6 @@ export class SignUpView extends React.Component {
                   onChangeText={value => this.setState({ email: value })}
                 />
               </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ pw: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Confirm Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ cpw: value })}
-                />
-              </Item>
             </Form>
             <Button
               style={{
@@ -123,8 +91,8 @@ export class SignUpView extends React.Component {
                 alignSelf: "center"
               }}
             >
-              <Icon name="checkmark-circle-outline" />
-              <Text>Sign Up!</Text>
+              <Icon name="add" />
+              <Text>Add Child</Text>
             </Button>
           </ScrollView>
         </Content>

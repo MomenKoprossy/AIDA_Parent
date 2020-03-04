@@ -31,10 +31,7 @@ export default class QuestionnaireView extends React.Component {
       <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
         <Header style={{ backgroundColor: "#c23fc4" }}>
           <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("HomePage")}
-            >
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
