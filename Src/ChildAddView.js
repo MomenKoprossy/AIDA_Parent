@@ -12,20 +12,32 @@ import {
   Text,
   Form,
   Item,
-  Label
+  Label,
+  Picker
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
+import { serverURL } from "./utils";
+import axios from "react-native-axios";
 
 export default class ChildAddView extends React.Component {
   state = {
+    cCode: "",
     fname: "",
     lname: "",
-    country: "",
     gender: "",
-    dob: ""
+    y: "",
+    m: "",
+    d: ""
   };
+  componentDidMount() {
+    this.CodeGen();
+  }
+
+  url = serverURL + "addchild";
+  codeGenURL = serverURL + "generate_child_code";
+
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
@@ -36,12 +48,20 @@ export default class ChildAddView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Sign Up</Title>
+            <Title>Add Child</Title>
           </Body>
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
             <Form>
+              <Item fixedLabel style={styles.item}>
+                <Label>Child Code:</Label>
+                <Input
+                  style={styles.input}
+                  editable={false}
+                  placeholder={this.state.cCode}
+                />
+              </Item>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
                 <Input
@@ -58,28 +78,49 @@ export default class ChildAddView extends React.Component {
                   onChangeText={value => this.setState({ lname: value })}
                 />
               </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Country:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ country: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
+              <Item fixedLabel picker style={(styles.item, { marginLeft: 15 })}>
                 <Label>Gender:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ gender: value })}
-                />
+                <Picker
+                  selectedValue={this.state.gender}
+                  mode="dropdown"
+                  onValueChange={value => this.setState({ gender: value })}
+                >
+                  <Picker.Item label="Male" value="M" />
+                  <Picker.Item label="Female" value="F" />
+                  <Picker.Item label="Apache Helicopter" value="Sad" />
+                </Picker>
               </Item>
-              <Item fixedLabel style={styles.item}>
+              <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>
                 <Label>Date of Birth:</Label>
                 <Input
-                  style={styles.input}
+                  type="number-pad"
+                  placeholder="DD"
+                  style={{
+                    width: 0.15 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
                   editable={true}
-                  onChangeText={value => this.setState({ email: value })}
+                  onChangeText={value => this.setState({ d: value })}
+                />
+                <Input
+                  type="number-pad"
+                  placeholder="MM"
+                  style={{
+                    width: 0.15 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
+                  editable={true}
+                  onChangeText={value => this.setState({ m: value })}
+                />
+                <Input
+                  placeholder="YYYY"
+                  type="number-pad"
+                  style={{
+                    width: 0.2 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
+                  editable={true}
+                  onChangeText={value => this.setState({ y: value })}
                 />
               </Item>
             </Form>
@@ -90,6 +131,7 @@ export default class ChildAddView extends React.Component {
                 justifyContent: "center",
                 alignSelf: "center"
               }}
+              onPress={() => this.addChildRequest()}
             >
               <Icon name="add" />
               <Text>Add Child</Text>
@@ -99,7 +141,36 @@ export default class ChildAddView extends React.Component {
       </Container>
     );
   }
+
+  CodeGen = () => {
+    axios.post(this.codeGenURL).then(req => {
+      this.setState({ cCode: req.data.child_code });
+    });
+  };
+
+  addChildRequest = () => {
+    axios
+      .post(this.url, {
+        child_code: this.state.cCode,
+        first_name: this.state.fname,
+        last_name: this.state.lname,
+        gender: this.state.gender,
+        year: this.state.y,
+        month: this.state.m,
+        day: this.state.d
+      })
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Child Added Successfully!");
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

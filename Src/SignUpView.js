@@ -186,10 +186,9 @@ export class SignUpView extends React.Component {
         day: this.state.d
       })
       .then(req => {
-        alert(JSON.stringify(req.data.success));
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
-        else {
+        else if (JSON.stringify(req.data.success) == "true") {
           alert("Signed Up Successfully! Now Login");
           this.props.navigation.goBack();
         }

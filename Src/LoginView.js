@@ -133,8 +133,6 @@ export class LoginView extends React.Component {
         else if (JSON.stringify(req.data.success) == "true") {
           this.props.navigation.navigate("DiagnosisHome");
           this.saveLogin();
-          // .then(() => alert("done"))
-          // .catch(() => alert("not done"));
         }
       })
       .catch(() => alert("Connection Error"));

@@ -14,6 +14,7 @@ import AccountEditView from "./Src/AccountEditView";
 import ChildDetailsView from "./Src/ChildDetailsView";
 import ChildListView from "./Src/ChildListView";
 import ChildAddView from "./Src/ChildAddView";
+import QMainView from "./Src/QMainView";
 
 const SNav = createStackNavigator(
   {
@@ -22,6 +23,7 @@ const SNav = createStackNavigator(
     DiagnosisHome: { screen: DiagnosisHomeView },
     Upload: { screen: VideoUploadView },
     Questionnaire: { screen: QuestionnaireView },
+    QMain: { screen: QMainView },
     Details: { screen: AccountDetailsView },
     Edit: { screen: AccountEditView },
     CList: { screen: ChildListView },
