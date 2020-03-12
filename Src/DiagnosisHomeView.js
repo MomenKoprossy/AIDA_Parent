@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, AsyncStorage } from "react-native";
 import {
   Container,
   Button,
@@ -22,7 +22,15 @@ export default class DiagnosisHomeView extends React.Component {
   state = {
     activeTab: "All"
   };
-
+  logout = async () => {
+    try {
+      await AsyncStorage.removeItem("login").then(() =>
+        this.props.navigation.goBack()
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   render() {
     return (
       <Container style={styles.container}>
@@ -31,10 +39,10 @@ export default class DiagnosisHomeView extends React.Component {
             <Button
               transparent
               onPress={() => {
-                this.props.navigation.goBack();
+                this.logout();
               }}
             >
-              <Icon name="arrow-back" />
+              <Icon name="exit" />
             </Button>
           </Left>
           <Body>

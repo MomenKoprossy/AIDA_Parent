@@ -5,7 +5,7 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import { LoadingView } from "./Src/LoadingView";
 import { LoginView } from "./Src/LoginView";
-import { SignUpView } from "./Src/SingUpView";
+import { SignUpView } from "./Src/SignUpView";
 import QuestionnaireView from "./Src/QuestionnaireView";
 import DiagnosisHomeView from "./Src/DiagnosisHomeView";
 import VideoUploadView from "./Src/VideoUploadView";

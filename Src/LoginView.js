@@ -3,12 +3,14 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Image
+  Image,
+  AsyncStorage
 } from "react-native";
 import { Block, Button, Input, Text } from "galio-framework";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
-import { HeaderHeight } from "./utils";
+import axios from "react-native-axios";
+import { HeaderHeight, serverURL } from "./utils";
 
 const { width } = Dimensions.get("window");
 
@@ -21,6 +23,13 @@ export class LoginView extends React.Component {
       password: false
     }
   };
+
+  url = serverURL + "login";
+
+  componentDidMount() {
+    this.getLogin();
+  }
+
   toggleActive = name => {
     const { active } = this.state;
     active[name] = !active[name];
@@ -90,7 +99,7 @@ export class LoginView extends React.Component {
                   shadowless
                   color="#c23fc4"
                   style={{ height: 48 }}
-                  onPress={() => this.handleLogin()}
+                  onPress={() => this.loginRequest()}
                 >
                   Login
                 </Button>
@@ -112,19 +121,44 @@ export class LoginView extends React.Component {
       </LinearGradient>
     );
   }
-  handleLogin = () => {
-    //this.loginRequest();
-
-    this.props.navigation.navigate("DiagnosisHome");
+  loginRequest = () => {
+    axios
+      .post(this.url, {
+        email: this.state.email,
+        password: this.state.password
+      })
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          this.props.navigation.navigate("DiagnosisHome");
+          this.saveLogin();
+          // .then(() => alert("done"))
+          // .catch(() => alert("not done"));
+        }
+      })
+      .catch(() => alert("Connection Error"));
   };
-  //   loginRequest = () => {
-  //     axios
-  //       .post("http://192.168.1.13:8080/login/", {
-  //         email: this.state.email,
-  //         password: this.state.password
-  //       })
-  //       .then(req => alert(JSON.stringify(req.data)));
-  //   };
+
+  saveLogin = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "login",
+        JSON.stringify(
+          (({ email, password }) => ({ email, password }))(this.state) //js god confirmed Using Object Destructuring and Property Shorthand
+        )
+      );
+    } catch (error) {}
+  };
+
+  getLogin = async () => {
+    try {
+      rero = await AsyncStorage.getItem("login");
+      info = JSON.parse(rero);
+      this.setState({ email: info.email, password: info.password });
+      this.loginRequest();
+    } catch (error) {}
+  };
 }
 
 const styles = StyleSheet.create({
