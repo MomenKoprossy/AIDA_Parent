@@ -157,7 +157,7 @@ export default class QuestionnaireView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title> Questionnaire </Title>
+            <Title>Questionnaire</Title>
           </Body>
         </Header>
         <Content>
@@ -175,13 +175,19 @@ export default class QuestionnaireView extends React.Component {
                   {this.props.navigation.state.params.ageGrp == "Toddler"
                     ? (this.state.Answers[index] || []).map((Ans, idx) => (
                         <ListItem key={idx}>
-                          <Radio onPress={() => this.Select(index, Ans)} />
+                          <Radio
+                            selected={Ans == this.state.Submit[index]}
+                            onPress={() => this.Select(index, Ans)}
+                          />
                           <Text> {Ans}</Text>
                         </ListItem>
                       ))
                     : (this.state.Answers || []).map((Ans, idx) => (
                         <ListItem key={idx}>
-                          <Radio onPress={() => this.Select(index, Ans)} />
+                          <Radio
+                            selected={Ans == this.state.Submit[index]}
+                            onPress={() => this.Select(index, Ans)}
+                          />
                           <Text> {Ans}</Text>
                         </ListItem>
                       ))}

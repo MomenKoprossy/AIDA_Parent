@@ -18,12 +18,14 @@ import QMainView from "./Src/QMainView";
 
 const SNav = createStackNavigator(
   {
+    QMain: { screen: QMainView },
+    Questionnaire: { screen: QuestionnaireView },
     Login: { screen: LoginView },
     SignUp: { screen: SignUpView },
     DiagnosisHome: { screen: DiagnosisHomeView },
     Upload: { screen: VideoUploadView },
     Questionnaire: { screen: QuestionnaireView },
-    QMain: { screen: QMainView },
+
     Details: { screen: AccountDetailsView },
     Edit: { screen: AccountEditView },
     CList: { screen: ChildListView },
