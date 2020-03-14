@@ -5,7 +5,7 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import { LoadingView } from "./Src/LoadingView";
 import { LoginView } from "./Src/LoginView";
-import { SignUpView } from "./Src/SingUpView";
+import { SignUpView } from "./Src/SignUpView";
 import QuestionnaireView from "./Src/QuestionnaireView";
 import DiagnosisHomeView from "./Src/DiagnosisHomeView";
 import VideoUploadView from "./Src/VideoUploadView";
@@ -14,6 +14,7 @@ import AccountEditView from "./Src/AccountEditView";
 import ChildDetailsView from "./Src/ChildDetailsView";
 import ChildListView from "./Src/ChildListView";
 import ChildAddView from "./Src/ChildAddView";
+import QMainView from "./Src/QMainView";
 
 const SNav = createStackNavigator(
   {
@@ -21,6 +22,7 @@ const SNav = createStackNavigator(
     SignUp: { screen: SignUpView },
     DiagnosisHome: { screen: DiagnosisHomeView },
     Upload: { screen: VideoUploadView },
+    QMain: { screen: QMainView },
     Questionnaire: { screen: QuestionnaireView },
     Details: { screen: AccountDetailsView },
     Edit: { screen: AccountEditView },
