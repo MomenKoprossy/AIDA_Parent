@@ -85,9 +85,12 @@ export default class ChildAddView extends React.Component {
                   mode="dropdown"
                   onValueChange={value => this.setState({ gender: value })}
                 >
-                  <Picker.Item label="Male" value="M" />
-                  <Picker.Item label="Female" value="F" />
-                  <Picker.Item label="Apache Helicopter" value="Sad" />
+                  <Picker.Item label="Male" value="Male" />
+                  <Picker.Item label="Female" value="Female" />
+                  <Picker.Item
+                    label="Prefer Not To Specify"
+                    value="Not Specified"
+                  />
                 </Picker>
               </Item>
               <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>

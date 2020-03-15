@@ -17,14 +17,29 @@ import {
   Icon
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import axios from "react-native-axios";
+import { serverURL } from "./utils";
 
 export default class QuestionnaireView extends React.Component {
   state = {
     ageGrp: "",
     Questions: [],
     Answers: [],
-    Submit: ["", "", "", "", "", "", "", "", "", ""]
+    Submit: [
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree",
+      "Definitely Agree"
+    ]
   };
+
+  url = serverURL + "submit_questionaire";
 
   QCHAT10 = [
     "Does your child look at you when you call his/her name?",
@@ -233,7 +248,7 @@ export default class QuestionnaireView extends React.Component {
           <Button
             rounded
             style={{ justifyContent: "center", backgroundColor: "#c23fc4" }}
-            onPress={() => alert(this.state.Submit)}
+            onPress={() => this.SubmitQues()}
           >
             <Text>Submit</Text>
           </Button>
@@ -245,5 +260,22 @@ export default class QuestionnaireView extends React.Component {
     tempArray = this.state.Submit;
     tempArray[index] = selected;
     this.setState({ Submit: tempArray });
+  };
+  SubmitQues = () => {
+    axios
+      .post(this.url, {
+        model_type: this.state.ageGrp,
+        child_code: "C9MX3D59",
+        answers: this.state.Submit
+      })
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Eshta");
+          //this.props.navigation.goBack();
+        }
+      })
+      .catch(Error => alert(Error));
   };
 }
