@@ -34,7 +34,8 @@ export default class QMainView extends Component {
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("Questionnaire", {
-                  ageGrp: "Toddler"
+                  ageGrp: "Toddler",
+                  cCode: this.props.navigation.state.params.cCode
                 })
               }
             >
@@ -58,7 +59,8 @@ export default class QMainView extends Component {
               style={styles.button}
               onPress={() => {
                 this.props.navigation.navigate("Questionnaire", {
-                  ageGrp: "Child"
+                  ageGrp: "Child",
+                  cCode: this.props.navigation.state.params.cCode
                 });
               }}
             >
@@ -82,7 +84,8 @@ export default class QMainView extends Component {
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("Questionnaire", {
-                  ageGrp: "Adolescent"
+                  ageGrp: "Adolescent",
+                  cCode: this.props.navigation.state.params.cCode
                 })
               }
             >
@@ -102,7 +105,7 @@ export default class QMainView extends Component {
                 <Text>Adolescent</Text>
               </Button>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("Questionnaire", {
@@ -125,7 +128,7 @@ export default class QMainView extends Component {
               >
                 <Text>Adult</Text>
               </Button>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </ScrollView>
         </Content>
       </Container>

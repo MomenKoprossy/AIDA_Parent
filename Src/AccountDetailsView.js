@@ -17,15 +17,29 @@ import {
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
+import axios from "react-native-axios";
+import { serverURL } from "./utils";
 
 export default class AccountDetailsView extends React.Component {
   state = {
-    fname: "",
-    lname: "",
-    email: "",
-    country: "",
-    age: ""
+    Det: {}
   };
+
+  url = serverURL + "get_user_data";
+
+  getDetails = () => {
+    axios
+      .post(this.url)
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          this.setState({ Det: req.data.result });
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
+
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
@@ -47,7 +61,7 @@ export default class AccountDetailsView extends React.Component {
                 <Input
                   style={styles.input}
                   editable={false}
-                  value={this.state.fname}
+                  value={this.state.Det.first_name}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -55,7 +69,7 @@ export default class AccountDetailsView extends React.Component {
                 <Input
                   style={styles.input}
                   editable={false}
-                  value={this.state.lname}
+                  value={this.state.Det.last_name}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -64,7 +78,7 @@ export default class AccountDetailsView extends React.Component {
                   type="email-address"
                   style={styles.input}
                   editable={false}
-                  value={this.state.email}
+                  value={this.state.Det.email}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -72,15 +86,7 @@ export default class AccountDetailsView extends React.Component {
                 <Input
                   style={styles.input}
                   editable={false}
-                  value={this.state.country}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Age:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.age}
+                  value={this.state.Det.country}
                 />
               </Item>
             </Form>

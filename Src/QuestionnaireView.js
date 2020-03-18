@@ -17,13 +17,34 @@ import {
   Icon
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import axios from "react-native-axios";
+import { serverURL } from "./utils";
 
 export default class QuestionnaireView extends React.Component {
   state = {
-    ageGrp: "",
     Questions: [],
     Answers: [],
     Submit: ["", "", "", "", "", "", "", "", "", ""]
+  };
+
+  url = serverURL + "submit_questionaire";
+
+  submitQues = () => {
+    axios
+      .post(this.url, {
+        child_code: this.props.navigation.state.params.cCode,
+        model_type: this.props.navigation.state.params.ageGrp,
+        answers: this.state.Submit
+      })
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Questionnaire Submitted Successfully!");
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => alert("Connection Error"));
   };
 
   QCHAT10 = [

@@ -17,11 +17,45 @@ import {
 } from "native-base";
 import Constants from "expo-constants";
 import { FloatingAction } from "react-native-floating-action";
+import axios from "react-native-axios";
+import { serverURL } from "./utils";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default class DiagnosisHomeView extends React.Component {
   state = {
-    activeTab: "All"
+    activeTab: "All",
+    reqs: []
   };
+
+  url = serverURL + "get_all_questionaire_data";
+  pdfurl = serverURL + "get_questionaire_report_pdf";
+
+  getRequests = () => {
+    axios
+      .post(this.url)
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          this.setState({ reqs: req.data.result });
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
+
+  getReport = questionaire_id => {
+    axios
+      .post(this.pdfurl, { questionaire_id: questionaire_id })
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          //no idea
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
+
   logout = async () => {
     try {
       await AsyncStorage.removeItem("login").then(() =>
@@ -31,6 +65,7 @@ export default class DiagnosisHomeView extends React.Component {
       console.log(error);
     }
   };
+
   render() {
     return (
       <Container style={styles.container}>
@@ -50,7 +85,7 @@ export default class DiagnosisHomeView extends React.Component {
           </Body>
           <Right></Right>
         </Header>
-        <Segment style={{ backgroundColor: "#c23fc4" }}>
+        {/* <Segment style={{ backgroundColor: "#c23fc4" }}>
           <Button
             active={this.state.activeTab === "All"}
             onPress={() => {
@@ -78,23 +113,34 @@ export default class DiagnosisHomeView extends React.Component {
           >
             <Text style={{ fontSize: 13 }}>Completed</Text>
           </Button>
-        </Segment>
+        </Segment> */}
         <Content padder>
-          <Card>
-            <CardItem
-              header
-              bordered
-              button
-              onPress={() => alert("Request Clicked")}
-            >
-              <Text>Reqest No.123154</Text>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>Autism Lord</Text>
-              </Body>
-            </CardItem>
-          </Card>
+          <ScrollView>
+            {(this.state.req || []).map((Req, index) => (
+              <Card key={index}>
+                <CardItem
+                  header
+                  bordered
+                  button
+                  onPress={() => this.getReport(Req.questionaire_id)}
+                >
+                  <Text>Reqest No.{Req.questionaire_id}</Text>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text>
+                      Submittion Date: {Req.date} at {Req.time}
+                    </Text>
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Text>Result: {Req.result}</Text>
+                  </Body>
+                </CardItem>
+              </Card>
+            ))}
+          </ScrollView>
         </Content>
         <FloatingAction
           actions={[
@@ -109,7 +155,7 @@ export default class DiagnosisHomeView extends React.Component {
               color: "#c23fc4"
             },
             {
-              text: "Questionnaire",
+              text: "Adult Questionnaire",
               name: "q",
               color: "#c23fc4"
             },
@@ -125,7 +171,10 @@ export default class DiagnosisHomeView extends React.Component {
             }
           ]}
           onPressItem={name => {
-            if (name == "q") this.props.navigation.navigate("QMain");
+            if (name == "q")
+              this.props.navigation.navigate("Questionnaire", {
+                ageGrp: "Adult"
+              });
             else if (name == "v") this.props.navigation.navigate("Upload");
             else if (name == "c") this.props.navigation.navigate("CList");
             else if (name == "d") this.props.navigation.navigate("Details");
