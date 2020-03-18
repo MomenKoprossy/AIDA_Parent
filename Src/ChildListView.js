@@ -15,11 +15,30 @@ import {
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import { FloatingAction } from "react-native-floating-action";
+import axios from "react-native-axios";
+import { serverURL } from "./utils";
 
 export default class ChildListView extends React.Component {
   state = {
-    Children: ["autistic child 1", "autistic child 2", "autistic child 3"]
+    Children: []
   };
+
+  url = serverURL + "get_all_child";
+
+  componentDidMount() {
+    axios
+      .post(this.url)
+      .then(req => {
+        alert(JSON.stringify(req.data.result));
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          //alert(req.data.result);
+          this.setState({ Children: req.data.result });
+        }
+      })
+      .catch(Error => alert(Error));
+  }
 
   render() {
     return (
@@ -39,7 +58,7 @@ export default class ChildListView extends React.Component {
             {(this.state.Children || []).map((Child, index) => (
               <Card key={index}>
                 <CardItem>
-                  <Text>{Child}</Text>
+                  <Text>{Child.first_name}</Text>
                 </CardItem>
               </Card>
             ))}
