@@ -9,7 +9,6 @@ import {
   Left,
   Icon,
   Content,
-  Text,
   Form,
   Item,
   Label
@@ -19,6 +18,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 import axios from "react-native-axios";
 import { serverURL } from "./utils";
+import { FloatingAction } from "react-native-floating-action";
 
 export default class ChildDetailsView extends React.Component {
   state = {
@@ -148,7 +148,10 @@ export default class ChildDetailsView extends React.Component {
                 cCode: this.state.cDet.child_code
               });
             //else if (name == "vs") this.props.navigation.navigate("Visual Schedule");
-            else if (name == "e") this.props.navigation.navigate("CEdit");
+            else if (name == "e")
+              this.props.navigation.navigate("CEdit", {
+                cCode: this.state.cDet.child_code
+              });
             else if (name == "r")
               this.removeRequest(this.state.cDet.child_code);
           }}

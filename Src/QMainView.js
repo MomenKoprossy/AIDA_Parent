@@ -90,7 +90,7 @@ export default class QMainView extends Component {
               }
             >
               <Image
-                source={require("../assets/teen.png")}
+                source={require("../assets/girl.png")}
                 style={{
                   marginBottom: 10,
                   width: 80,

@@ -24,18 +24,7 @@ export default class QuestionnaireView extends React.Component {
   state = {
     Questions: [],
     Answers: [],
-    Submit: [
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree",
-      "Definitely Agree"
-    ]
+    Submit: ["", "", "", "", "", "", "", "", "", ""]
   };
 
   url = serverURL + "submit_questionaire";
@@ -48,6 +37,7 @@ export default class QuestionnaireView extends React.Component {
         answers: this.state.Submit
       })
       .then(req => {
+        alert(JSON.stringify(req.data.success));
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
@@ -55,14 +45,14 @@ export default class QuestionnaireView extends React.Component {
           this.props.navigation.goBack();
         }
       })
-      .catch(() => alert("Connection Error"));
+      .catch(Error => alert(Error));
   };
 
   QCHAT10 = [
     "Does your child look at you when you call his/her name?",
     "How easy is it for you to get eye contact with your child?",
     "Does your child point to indicate that s/he wants something? (e.g. a toy that is out of reach)",
-    "Does your child point to share interest with you? (e.g. poin9ng at an interesting sight)",
+    "Does your child point to share interest with you? (e.g. pointing at an interesting sight)",
     "Does your child pretend? (e.g. care for dolls, talk on a toy phone)",
     "Does your child follow where you’re looking?",
     "If you or someone else in the family is visibly upset, does your child show signs of wanting to comfort them?  (e.g. stroking hair, hugging them)",
@@ -161,6 +151,20 @@ export default class QuestionnaireView extends React.Component {
       "Slightly unusual",
       "Very unusual",
       "My child doesn’t speak"
+    ],
+    [
+      "Many times a day",
+      "A few times a day",
+      "A few times a week",
+      "Less than once a week",
+      "Never"
+    ],
+    [
+      "Many times a day",
+      "A few times a day",
+      "A few times a week",
+      "Less than once a week",
+      "Never"
     ]
   ];
 
@@ -223,41 +227,6 @@ export default class QuestionnaireView extends React.Component {
                           <Text> {Ans}</Text>
                         </ListItem>
                       ))}
-                  {/* <ListItem>
-                    <Radio
-                      selected={Ques.A == "Never"}
-                      onPress={() => this.Select(index, "Never")}
-                    />
-                    <Text> Never</Text>
-                  </ListItem>
-                  <ListItem>
-                    <Radio
-                      selected={Ques.A == "Rarely"}
-                      onPress={() => this.Select(index, "Rarely")}
-                    />
-                    <Text> Rarely</Text>
-                  </ListItem>
-                  <ListItem>
-                    <Radio
-                      selected={Ques.A == "Sometimes"}
-                      onPress={() => this.Select(index, "Sometimes")}
-                    />
-                    <Text> Sometimes</Text>
-                  </ListItem>
-                  <ListItem>
-                    <Radio
-                      selected={Ques.A == "Often"}
-                      onPress={() => this.Select(index, "Often")}
-                    />
-                    <Text> Often</Text>
-                  </ListItem>
-                  <ListItem>
-                    <Radio
-                      selected={Ques.A == "Very Often"}
-                      onPress={() => this.Select(index, "Very Often")}
-                    />
-                    <Text> Very Often</Text>
-                  </ListItem> */}
                 </CardItem>
               </Card>
             ))}
@@ -265,7 +234,7 @@ export default class QuestionnaireView extends React.Component {
           <Button
             rounded
             style={{ justifyContent: "center", backgroundColor: "#c23fc4" }}
-            onPress={() => this.SubmitQues()}
+            onPress={() => this.submitQues()}
           >
             <Text>Submit</Text>
           </Button>
@@ -277,22 +246,5 @@ export default class QuestionnaireView extends React.Component {
     tempArray = this.state.Submit;
     tempArray[index] = selected;
     this.setState({ Submit: tempArray });
-  };
-  SubmitQues = () => {
-    axios
-      .post(this.url, {
-        model_type: this.state.ageGrp,
-        child_code: "C9MX3D59",
-        answers: this.state.Submit
-      })
-      .then(req => {
-        if (JSON.stringify(req.data.success) == "false")
-          alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
-          alert("Eshta");
-          //this.props.navigation.goBack();
-        }
-      })
-      .catch(Error => alert(Error));
   };
 }

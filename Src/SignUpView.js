@@ -184,9 +184,7 @@ export class SignUpView extends React.Component {
         password: this.state.pw,
         gender: this.state.gender,
         country: this.state.country,
-        year: this.state.y,
-        month: this.state.m,
-        day: this.state.d
+        date: this.state.y + "-" + this.state.m + "-" + this.state.d
       })
       .then(req => {
         if (JSON.stringify(req.data.success) == "false")

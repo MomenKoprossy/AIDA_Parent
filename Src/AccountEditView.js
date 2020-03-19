@@ -12,23 +12,50 @@ import {
   Text,
   Form,
   Item,
-  Label
+  Label,
+  H1
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
+import { serverURL } from "./utils";
+import axios from "react-native-axios";
 
 export default class AccountEditView extends React.Component {
   state = {
     fname: "",
     lname: "",
-    email: "",
     country: "",
-    dob: "",
-    opw: "",
     pw: "",
-    cpw: ""
+    d: "",
+    m: "",
+    y: ""
   };
+
+  url = serverURL + "modifi_user_data";
+
+  sendEdit = () => {
+    edit = {};
+    this.state.fname != "" ? (edit.firstname = this.state.fname) : null;
+    this.state.pw != "" ? (edit.password = this.state.pw) : null;
+    this.state.lname != "" ? (edit.lastname = this.state.lname) : null;
+    this.state.country != "" ? (edit.country = this.state.country) : null;
+    this.state.d != "" && this.state.m != "" && this.state.y != ""
+      ? (edit.date = this.state.y + "-" + this.state.m + "-" + this.state.d)
+      : null;
+    axios
+      .post(this.url, edit)
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Account Edited Successfully");
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
+
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
@@ -44,6 +71,7 @@ export default class AccountEditView extends React.Component {
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
+            <H1>Only fill what you need to change</H1>
             <Form>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
@@ -62,15 +90,6 @@ export default class AccountEditView extends React.Component {
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
-                <Label>Email:</Label>
-                <Input
-                  type="email-address"
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.email}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
                 <Label>Country:</Label>
                 <Input
                   style={styles.input}
@@ -78,21 +97,37 @@ export default class AccountEditView extends React.Component {
                   onChangeText={value => this.setState({ country: value })}
                 />
               </Item>
-              <Item fixedLabel style={styles.item}>
+              <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>
                 <Label>Date of Birth:</Label>
                 <Input
-                  style={styles.input}
+                  type="number-pad"
+                  placeholder="DD"
+                  style={{
+                    width: 0.15 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
                   editable={true}
-                  onChangeText={value => this.setState({ email: value })}
+                  onChangeText={value => this.setState({ d: value })}
                 />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Old Password:</Label>
                 <Input
-                  password
-                  style={styles.input}
+                  type="number-pad"
+                  placeholder="MM"
+                  style={{
+                    width: 0.15 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
                   editable={true}
-                  onChangeText={value => this.setState({ opw: value })}
+                  onChangeText={value => this.setState({ m: value })}
+                />
+                <Input
+                  placeholder="YYYY"
+                  type="number-pad"
+                  style={{
+                    width: 0.2 * Dimensions.get("window").width,
+                    marginRight: 15
+                  }}
+                  editable={true}
+                  onChangeText={value => this.setState({ y: value })}
                 />
               </Item>
               <Item fixedLabel style={styles.item}>
@@ -104,15 +139,6 @@ export default class AccountEditView extends React.Component {
                   onChangeText={value => this.setState({ pw: value })}
                 />
               </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Confirm Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ cpw: value })}
-                />
-              </Item>
             </Form>
             <Button
               style={{
@@ -121,6 +147,7 @@ export default class AccountEditView extends React.Component {
                 justifyContent: "center",
                 alignSelf: "center"
               }}
+              onPress={() => this.sendEdit()}
             >
               <Icon name="checkmark-circle-outline" />
               <Text>Confrim</Text>

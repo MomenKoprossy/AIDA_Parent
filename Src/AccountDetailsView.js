@@ -27,6 +27,10 @@ export default class AccountDetailsView extends React.Component {
 
   url = serverURL + "get_user_data";
 
+  componentDidMount() {
+    this.getDetails();
+  }
+
   getDetails = () => {
     axios
       .post(this.url)

@@ -13,7 +13,7 @@ import {
   Form,
   Item,
   Label,
-  Picker
+  H1
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,22 +21,36 @@ import { Input } from "galio-framework";
 import { serverURL } from "./utils";
 import axios from "react-native-axios";
 
-export default class ChildAddView extends React.Component {
+export default class ChildEditView extends React.Component {
   state = {
-    cCode: "",
     fname: "",
     lname: "",
-    gender: "",
-    y: "",
+    d: "",
     m: "",
-    d: ""
+    y: ""
   };
-  componentDidMount() {
-    this.CodeGen();
-  }
 
-  url = serverURL + "addchild";
-  codeGenURL = serverURL + "generate_child_code";
+  url = serverURL + "modifi_child_data";
+
+  sendEdit = () => {
+    edit = { child_code: this.props.navigation.state.params.cCode };
+    this.state.fname != "" ? (edit.firstname = this.state.fname) : null;
+    this.state.lname != "" ? (edit.lastname = this.state.lname) : null;
+    this.state.d != "" && this.state.m != "" && this.state.y != ""
+      ? (edit.date = this.state.y + "-" + this.state.m + "-" + this.state.d)
+      : null;
+    axios
+      .post(this.url, edit)
+      .then(req => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Child Edited Successfully");
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => alert("Connection Error"));
+  };
 
   render() {
     return (
@@ -48,20 +62,13 @@ export default class ChildAddView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>Add Child</Title>
+            <Title>Edit Child</Title>
           </Body>
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
+            <H1>Only fill what you need to change</H1>
             <Form>
-              <Item fixedLabel style={styles.item}>
-                <Label>Child Code:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  placeholder={this.state.cCode}
-                />
-              </Item>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>
                 <Input
@@ -77,21 +84,6 @@ export default class ChildAddView extends React.Component {
                   editable={true}
                   onChangeText={value => this.setState({ lname: value })}
                 />
-              </Item>
-              <Item fixedLabel picker style={(styles.item, { marginLeft: 15 })}>
-                <Label>Gender:</Label>
-                <Picker
-                  selectedValue={this.state.gender}
-                  mode="dropdown"
-                  onValueChange={value => this.setState({ gender: value })}
-                >
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item
-                    label="Prefer Not To Specify"
-                    value="Not Specified"
-                  />
-                </Picker>
               </Item>
               <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>
                 <Label>Date of Birth:</Label>
@@ -134,44 +126,17 @@ export default class ChildAddView extends React.Component {
                 justifyContent: "center",
                 alignSelf: "center"
               }}
-              onPress={() => this.addChildRequest()}
+              onPress={() => this.sendEdit()}
             >
-              <Icon name="add" />
-              <Text>Add Child</Text>
+              <Icon name="checkmark-circle-outline" />
+              <Text>Confrim</Text>
             </Button>
           </ScrollView>
         </Content>
       </Container>
     );
   }
-
-  CodeGen = () => {
-    axios.post(this.codeGenURL).then(req => {
-      this.setState({ cCode: req.data.child_code });
-    });
-  };
-
-  addChildRequest = () => {
-    axios
-      .post(this.url, {
-        child_code: this.state.cCode,
-        first_name: this.state.fname,
-        last_name: this.state.lname,
-        gender: this.state.gender,
-        date: this.state.y + "-" + this.state.m + "-" + this.state.d
-      })
-      .then(req => {
-        if (JSON.stringify(req.data.success) == "false")
-          alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
-          alert("Child Added Successfully!");
-          this.props.navigation.goBack();
-        }
-      })
-      .catch(() => alert("Connection Error"));
-  };
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

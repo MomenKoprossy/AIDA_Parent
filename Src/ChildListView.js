@@ -23,17 +23,15 @@ export default class ChildListView extends React.Component {
     Children: []
   };
 
-  url = serverURL + "get_all_child";
+  url = serverURL + "get_all_child_data";
 
   componentDidMount() {
     axios
       .post(this.url)
       .then(req => {
-        alert(JSON.stringify(req.data.result));
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          //alert(req.data.result);
           this.setState({ Children: req.data.result });
         }
       })
@@ -57,7 +55,14 @@ export default class ChildListView extends React.Component {
           <ScrollView>
             {(this.state.Children || []).map((Child, index) => (
               <Card key={index}>
-                <CardItem>
+                <CardItem
+                  button
+                  onPress={() =>
+                    this.props.navigation.navigate("CDetails", {
+                      cCode: Child.child_code
+                    })
+                  }
+                >
                   <Text>{Child.first_name}</Text>
                 </CardItem>
               </Card>

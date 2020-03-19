@@ -30,6 +30,10 @@ export default class DiagnosisHomeView extends React.Component {
   url = serverURL + "get_all_questionaire_data";
   pdfurl = serverURL + "get_questionaire_report_pdf";
 
+  componentDidMount() {
+    this.getRequests();
+  }
+
   getRequests = () => {
     axios
       .post(this.url)
@@ -116,7 +120,7 @@ export default class DiagnosisHomeView extends React.Component {
         </Segment> */}
         <Content padder>
           <ScrollView>
-            {(this.state.req || []).map((Req, index) => (
+            {(this.state.reqs || []).map((Req, index) => (
               <Card key={index}>
                 <CardItem
                   header
@@ -126,10 +130,10 @@ export default class DiagnosisHomeView extends React.Component {
                 >
                   <Text>Reqest No.{Req.questionaire_id}</Text>
                 </CardItem>
-                <CardItem>
+                <CardItem bordered>
                   <Body>
                     <Text>
-                      Submittion Date: {Req.date} at {Req.time}
+                      Submittion Date: {Req.date.substr(0, 9)} at {Req.time}
                     </Text>
                   </Body>
                 </CardItem>
@@ -160,11 +164,6 @@ export default class DiagnosisHomeView extends React.Component {
               color: "#c23fc4"
             },
             {
-              text: "Video Analysis",
-              name: "v",
-              color: "#c23fc4"
-            },
-            {
               text: "fMRI",
               name: "f",
               color: "#c23fc4"
@@ -175,7 +174,6 @@ export default class DiagnosisHomeView extends React.Component {
               this.props.navigation.navigate("Questionnaire", {
                 ageGrp: "Adult"
               });
-            else if (name == "v") this.props.navigation.navigate("Upload");
             else if (name == "c") this.props.navigation.navigate("CList");
             else if (name == "d") this.props.navigation.navigate("Details");
             else if (name == "f")

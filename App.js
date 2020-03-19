@@ -15,6 +15,7 @@ import ChildDetailsView from "./Src/ChildDetailsView";
 import ChildListView from "./Src/ChildListView";
 import ChildAddView from "./Src/ChildAddView";
 import QMainView from "./Src/QMainView";
+import ChildEditView from "./Src/ChildEditView";
 
 const SNav = createStackNavigator(
   {
@@ -27,8 +28,9 @@ const SNav = createStackNavigator(
     Details: { screen: AccountDetailsView },
     Edit: { screen: AccountEditView },
     CList: { screen: ChildListView },
-    //CDetails: { screen: ChildDetailsView },
-    CAdd: { screen: ChildAddView }
+    CDetails: { screen: ChildDetailsView },
+    CAdd: { screen: ChildAddView },
+    CEdit: { screen: ChildEditView }
   },
   {
     headerMode: "none",
