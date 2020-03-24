@@ -1,5 +1,10 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  View
+} from "react-native";
 import {
   Container,
   Button,
@@ -52,94 +57,104 @@ export default class ChildAddView extends React.Component {
           </Body>
         </Header>
         <Content contentContainerStyle={styles.container}>
-          <ScrollView>
-            <Form>
-              <Item fixedLabel style={styles.item}>
-                <Label>Child Code:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  placeholder={this.state.cCode}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>First Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ fname: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Last Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ lname: value })}
-                />
-              </Item>
-              <Item fixedLabel picker style={(styles.item, { marginLeft: 15 })}>
-                <Label>Gender:</Label>
-                <Picker
-                  selectedValue={this.state.gender}
-                  mode="dropdown"
-                  onValueChange={value => this.setState({ gender: value })}
-                >
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item
-                    label="Prefer Not To Specify"
-                    value="Not Specified"
+          <KeyboardAvoidingView enabled behavior="padding">
+            <ScrollView>
+              <Form>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Child Code:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={false}
+                    placeholder={this.state.cCode}
                   />
-                </Picker>
-              </Item>
-              <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>
-                <Label>Date of Birth:</Label>
-                <Input
-                  type="number-pad"
-                  placeholder="DD"
-                  style={{
-                    width: 0.15 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ d: value })}
-                />
-                <Input
-                  type="number-pad"
-                  placeholder="MM"
-                  style={{
-                    width: 0.15 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ m: value })}
-                />
-                <Input
-                  placeholder="YYYY"
-                  type="number-pad"
-                  style={{
-                    width: 0.2 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ y: value })}
-                />
-              </Item>
-            </Form>
-            <Button
-              style={{
-                backgroundColor: "#c23fc4",
-                width: "60%",
-                justifyContent: "center",
-                alignSelf: "center"
-              }}
-              onPress={() => this.addChildRequest()}
-            >
-              <Icon name="add" />
-              <Text>Add Child</Text>
-            </Button>
-          </ScrollView>
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>First Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ fname: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Last Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ lname: value })}
+                  />
+                </Item>
+                <Item
+                  fixedLabel
+                  picker
+                  style={(styles.item, { marginLeft: 15 })}
+                >
+                  <Label>Gender:</Label>
+                  <Picker
+                    selectedValue={this.state.gender}
+                    mode="dropdown"
+                    onValueChange={value => this.setState({ gender: value })}
+                  >
+                    <Picker.Item label="Male" value="Male" />
+                    <Picker.Item label="Female" value="Female" />
+                    <Picker.Item
+                      label="Prefer Not To Specify"
+                      value="Not Specified"
+                    />
+                  </Picker>
+                </Item>
+                <Item
+                  fixedLabel
+                  style={(styles.item, { flexDirection: "row" })}
+                >
+                  <Label>Date of Birth:</Label>
+                  <Input
+                    type="number-pad"
+                    placeholder="DD"
+                    style={{
+                      width: 0.15 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ d: value })}
+                  />
+                  <Input
+                    type="number-pad"
+                    placeholder="MM"
+                    style={{
+                      width: 0.15 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ m: value })}
+                  />
+                  <Input
+                    placeholder="YYYY"
+                    type="number-pad"
+                    style={{
+                      width: 0.2 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ y: value })}
+                  />
+                </Item>
+              </Form>
+              <View style={{ height: 60 }}></View>
+              <Button
+                style={{
+                  backgroundColor: "#c23fc4",
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center"
+                }}
+                onPress={() => this.addChildRequest()}
+              >
+                <Icon name="add" />
+                <Text>Add Child</Text>
+              </Button>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     );

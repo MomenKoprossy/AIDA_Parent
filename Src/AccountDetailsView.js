@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator,
+  View
+} from "react-native";
 import {
   Container,
   Button,
@@ -22,7 +28,8 @@ import { serverURL } from "./utils";
 
 export default class AccountDetailsView extends React.Component {
   state = {
-    Det: {}
+    Det: {},
+    refresh: true
   };
 
   url = serverURL + "get_user_data";
@@ -38,13 +45,20 @@ export default class AccountDetailsView extends React.Component {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.setState({ Det: req.data.result });
+          this.setState({ Det: req.data.result, refresh: false });
         }
       })
       .catch(() => alert("Connection Error"));
   };
 
   render() {
+    if (this.state.refresh) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
         <Header style={{ backgroundColor: "#c23fc4" }}>
@@ -57,7 +71,15 @@ export default class AccountDetailsView extends React.Component {
             <Title>Account Details</Title>
           </Body>
         </Header>
-        <Content contentContainerStyle={styles.container}>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={() => this.getDetails()}
+            />
+          }
+          contentContainerStyle={styles.container}
+        >
           <ScrollView>
             <Form>
               <Item fixedLabel style={styles.item}>

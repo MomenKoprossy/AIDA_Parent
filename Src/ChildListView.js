@@ -13,6 +13,7 @@ import {
   Left,
   Icon
 } from "native-base";
+import { RefreshControl, ActivityIndicator, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { FloatingAction } from "react-native-floating-action";
 import axios from "react-native-axios";
@@ -20,25 +21,37 @@ import { serverURL } from "./utils";
 
 export default class ChildListView extends React.Component {
   state = {
-    Children: []
+    Children: [],
+    refresh: true
   };
 
   url = serverURL + "get_all_child_data";
 
   componentDidMount() {
+    this.getChildList();
+  }
+
+  getChildList = () => {
     axios
       .post(this.url)
       .then(req => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.setState({ Children: req.data.result });
+          this.setState({ Children: req.data.result, refresh: false });
         }
       })
       .catch(Error => alert(Error));
-  }
+  };
 
   render() {
+    if (this.state.refresh) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
         <Header style={{ backgroundColor: "#c23fc4" }}>
@@ -51,7 +64,14 @@ export default class ChildListView extends React.Component {
             <Title> Child List </Title>
           </Body>
         </Header>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={() => this.getChildList()}
+            />
+          }
+        >
           <ScrollView>
             {(this.state.Children || []).map((Child, index) => (
               <Card key={index}>

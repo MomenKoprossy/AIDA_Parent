@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, AsyncStorage } from "react-native";
+import {
+  StyleSheet,
+  AsyncStorage,
+  RefreshControl,
+  View,
+  ActivityIndicator
+} from "react-native";
 import {
   Container,
   Button,
@@ -23,6 +29,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default class DiagnosisHomeView extends React.Component {
   state = {
+    refresh: true,
     activeTab: "All",
     reqs: []
   };
@@ -41,7 +48,7 @@ export default class DiagnosisHomeView extends React.Component {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.setState({ reqs: req.data.result });
+          this.setState({ reqs: req.data.result, refresh: false });
         }
       })
       .catch(() => alert("Connection Error"));
@@ -71,6 +78,13 @@ export default class DiagnosisHomeView extends React.Component {
   };
 
   render() {
+    if (this.state.refresh) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     return (
       <Container style={styles.container}>
         <Header hasSegment style={{ backgroundColor: "#c23fc4" }}>
@@ -118,7 +132,15 @@ export default class DiagnosisHomeView extends React.Component {
             <Text style={{ fontSize: 13 }}>Completed</Text>
           </Button>
         </Segment> */}
-        <Content padder>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={() => this.getRequests()}
+            />
+          }
+          padder
+        >
           <ScrollView>
             {(this.state.reqs || []).map((Req, index) => (
               <Card key={index}>
@@ -128,18 +150,18 @@ export default class DiagnosisHomeView extends React.Component {
                   button
                   onPress={() => this.getReport(Req.questionaire_id)}
                 >
-                  <Text>Reqest No.{Req.questionaire_id}</Text>
+                  <Text>Request No.{Req.questionaire_id}</Text>
                 </CardItem>
                 <CardItem bordered>
                   <Body>
                     <Text>
-                      Submittion Date: {Req.date.substr(0, 9)} at {Req.time}
+                      Submission Date: {Req.date.substr(0, 10)} at {Req.time}
                     </Text>
                   </Body>
                 </CardItem>
                 <CardItem>
                   <Body>
-                    <Text>Result: {Req.result}</Text>
+                    <Text>Result: {Req.result}/10</Text>
                   </Body>
                 </CardItem>
               </Card>

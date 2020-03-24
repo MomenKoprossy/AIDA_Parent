@@ -1,5 +1,10 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator
+} from "react-native";
 import {
   Container,
   Button,
@@ -12,8 +17,7 @@ import {
   Text,
   Form,
   Item,
-  Label,
-  H1
+  Label
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
@@ -71,7 +75,6 @@ export default class AccountEditView extends React.Component {
         </Header>
         <Content contentContainerStyle={styles.container}>
           <ScrollView>
-            <H1>Only fill what you need to change</H1>
             <Form>
               <Item fixedLabel style={styles.item}>
                 <Label>First Name:</Label>

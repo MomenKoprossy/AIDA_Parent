@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  RefreshControl,
+  ActivityIndicator,
+  View
+} from "react-native";
 import {
   Container,
   Button,
@@ -22,7 +28,8 @@ import { FloatingAction } from "react-native-floating-action";
 
 export default class ChildDetailsView extends React.Component {
   state = {
-    cDet: {}
+    cDet: {},
+    refresh: true
   };
 
   url = serverURL + "get_child_data";
@@ -49,7 +56,7 @@ export default class ChildDetailsView extends React.Component {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.setState({ cDet: req.data.result });
+          this.setState({ cDet: req.data.result, refresh: false });
         }
       })
       .catch(() => alert("Connection Error"));
@@ -60,6 +67,13 @@ export default class ChildDetailsView extends React.Component {
   }
 
   render() {
+    if (this.state.refresh) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
         <Header style={{ backgroundColor: "#c23fc4" }}>
@@ -72,7 +86,17 @@ export default class ChildDetailsView extends React.Component {
             <Title>Child Details</Title>
           </Body>
         </Header>
-        <Content contentContainerStyle={styles.container}>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={() =>
+                this.childDetails(this.props.navigation.state.params.cCode)
+              }
+            />
+          }
+          contentContainerStyle={styles.container}
+        >
           <ScrollView>
             <Form>
               <Item fixedLabel style={styles.item}>

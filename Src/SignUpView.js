@@ -1,5 +1,10 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  KeyboardAvoidingView,
+  View
+} from "react-native";
 import {
   Container,
   Button,
@@ -51,123 +56,134 @@ export class SignUpView extends React.Component {
             <Title>Sign Up</Title>
           </Body>
         </Header>
+
         <Content contentContainerStyle={styles.container}>
-          <ScrollView>
-            <Form>
-              <H1>Guardian Details ONLY!</H1>
-              <Item fixedLabel style={styles.item}>
-                <Label>First Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ fname: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Last Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ lname: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Email:</Label>
-                <Input
-                  type="email-address"
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ email: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Country:</Label>
-                <Input
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ country: value })}
-                />
-              </Item>
-              <Item fixedLabel picker style={(styles.item, { marginLeft: 15 })}>
-                <Label>Gender:</Label>
-                <Picker
-                  selectedValue={this.state.gender}
-                  mode="dropdown"
-                  onValueChange={value => this.setState({ gender: value })}
-                >
-                  <Picker.Item label="Male" value="Male" />
-                  <Picker.Item label="Female" value="Female" />
-                  <Picker.Item
-                    label="Prefer Not To Specify"
-                    value="Not Specified"
+          <KeyboardAvoidingView enabled behavior="padding">
+            <ScrollView>
+              <Form>
+                <H1>Guardian Details ONLY!</H1>
+                <Item fixedLabel style={styles.item}>
+                  <Label>First Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ fname: value })}
                   />
-                </Picker>
-              </Item>
-              <Item fixedLabel style={(styles.item, { flexDirection: "row" })}>
-                <Label>Date of Birth:</Label>
-                <Input
-                  type="number-pad"
-                  placeholder="DD"
-                  style={{
-                    width: 0.15 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ d: value })}
-                />
-                <Input
-                  type="number-pad"
-                  placeholder="MM"
-                  style={{
-                    width: 0.15 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ m: value })}
-                />
-                <Input
-                  placeholder="YYYY"
-                  type="number-pad"
-                  style={{
-                    width: 0.2 * Dimensions.get("window").width,
-                    marginRight: 15
-                  }}
-                  editable={true}
-                  onChangeText={value => this.setState({ y: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ pw: value })}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Confirm Password:</Label>
-                <Input
-                  password
-                  style={styles.input}
-                  editable={true}
-                  onChangeText={value => this.setState({ cpw: value })}
-                />
-              </Item>
-            </Form>
-            <Button
-              style={{
-                backgroundColor: "#c23fc4",
-                width: "60%",
-                justifyContent: "center",
-                alignSelf: "center"
-              }}
-              onPress={() => this.signUpRequest()}
-            >
-              <Icon name="checkmark-circle-outline" />
-              <Text>Sign Up!</Text>
-            </Button>
-          </ScrollView>
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Last Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ lname: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Email:</Label>
+                  <Input
+                    type="email-address"
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ email: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Country:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ country: value })}
+                  />
+                </Item>
+                <Item
+                  fixedLabel
+                  picker
+                  style={(styles.item, { marginLeft: 15 })}
+                >
+                  <Label>Gender:</Label>
+                  <Picker
+                    selectedValue={this.state.gender}
+                    mode="dropdown"
+                    onValueChange={value => this.setState({ gender: value })}
+                  >
+                    <Picker.Item label="Male" value="Male" />
+                    <Picker.Item label="Female" value="Female" />
+                    <Picker.Item
+                      label="Prefer Not To Specify"
+                      value="Not Specified"
+                    />
+                  </Picker>
+                </Item>
+                <Item
+                  fixedLabel
+                  style={(styles.item, { flexDirection: "row" })}
+                >
+                  <Label>Date of Birth:</Label>
+                  <Input
+                    type="number-pad"
+                    placeholder="DD"
+                    style={{
+                      width: 0.15 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ d: value })}
+                  />
+                  <Input
+                    type="number-pad"
+                    placeholder="MM"
+                    style={{
+                      width: 0.15 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ m: value })}
+                  />
+                  <Input
+                    placeholder="YYYY"
+                    type="number-pad"
+                    style={{
+                      width: 0.2 * Dimensions.get("window").width,
+                      marginRight: 15
+                    }}
+                    editable={true}
+                    onChangeText={value => this.setState({ y: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Password:</Label>
+                  <Input
+                    password
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ pw: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Confirm Password:</Label>
+                  <Input
+                    password
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ cpw: value })}
+                  />
+                </Item>
+                <View style={{ height: 60 }}></View>
+              </Form>
+              <Button
+                style={{
+                  backgroundColor: "#c23fc4",
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center"
+                }}
+                onPress={() => this.signUpRequest()}
+              >
+                <Icon name="checkmark-circle-outline" />
+                <Text>Sign Up!</Text>
+              </Button>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     );

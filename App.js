@@ -16,9 +16,11 @@ import ChildListView from "./Src/ChildListView";
 import ChildAddView from "./Src/ChildAddView";
 import QMainView from "./Src/QMainView";
 import ChildEditView from "./Src/ChildEditView";
+import VSBeta from "./Src/VSBETA";
 
 const SNav = createStackNavigator(
   {
+    //VS: { screen: VSBeta },
     Login: { screen: LoginView },
     SignUp: { screen: SignUpView },
     DiagnosisHome: { screen: DiagnosisHomeView },
