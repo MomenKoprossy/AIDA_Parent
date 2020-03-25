@@ -26,6 +26,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 import { serverURL } from "./utils";
 import axios from "react-native-axios";
+import CountryPicker from "react-native-country-picker-modal";
+import DatePicker from "react-native-datepicker";
 
 export class SignUpView extends React.Component {
   state = {
@@ -34,11 +36,10 @@ export class SignUpView extends React.Component {
     email: "",
     country: "",
     gender: "",
-    d: "",
-    m: "",
-    y: "",
+    date: "",
     pw: "",
-    cpw: ""
+    cpw: "",
+    countryCode: ""
   };
 
   url = serverURL + "signup";
@@ -88,12 +89,21 @@ export class SignUpView extends React.Component {
                   />
                 </Item>
                 <Item fixedLabel style={styles.item}>
-                  <Label>Country:</Label>
-                  <Input
-                    style={styles.input}
-                    editable={true}
-                    onChangeText={value => this.setState({ country: value })}
-                  />
+                  <Label style={{ marginBottom: 15 }}>Country:</Label>
+                  <Left marginRight={20} style={{ marginBottom: 15 }}>
+                    <CountryPicker
+                      onSelect={country =>
+                        this.setState({
+                          country: country.name,
+                          countryCode: country.cca2
+                        })
+                      }
+                      withFilter={true}
+                      withAlphaFilter={true}
+                      withCountryNameButton={true}
+                      countryCode={this.state.countryCode}
+                    />
+                  </Left>
                 </Item>
                 <Item
                   fixedLabel
@@ -114,41 +124,22 @@ export class SignUpView extends React.Component {
                     />
                   </Picker>
                 </Item>
-                <Item
-                  fixedLabel
-                  style={(styles.item, { flexDirection: "row" })}
-                >
-                  <Label>Date of Birth:</Label>
-                  <Input
-                    type="number-pad"
-                    placeholder="DD"
-                    style={{
-                      width: 0.15 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ d: value })}
-                  />
-                  <Input
-                    type="number-pad"
-                    placeholder="MM"
-                    style={{
-                      width: 0.15 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ m: value })}
-                  />
-                  <Input
-                    placeholder="YYYY"
-                    type="number-pad"
-                    style={{
-                      width: 0.2 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ y: value })}
-                  />
+                <Item fixedLabel style={styles.item}>
+                  <Label style={{ marginBottom: 15, marginTop: 10 }}>
+                    Date of Birth:
+                  </Label>
+                  <Left marginRight={20}>
+                    <DatePicker
+                      style={{ marginBottom: 15, marginTop: 10 }}
+                      placeholder="Select Date"
+                      date={this.state.date}
+                      confirmBtnText="Confirm"
+                      cancelBtnTestID="Cancel"
+                      onDateChange={date => {
+                        this.setState({ date: date });
+                      }}
+                    />
+                  </Left>
                 </Item>
                 <Item fixedLabel style={styles.item}>
                   <Label>Password:</Label>
@@ -188,29 +179,29 @@ export class SignUpView extends React.Component {
       </Container>
     );
   }
-  checkPass = () => {
-    if (this.state.cpw != this.state.pw) alert("Password Doesnt Match");
-  };
+
   signUpRequest = () => {
-    axios
-      .post(this.url, {
-        first_name: this.state.fname,
-        last_name: this.state.lname,
-        email: this.state.email,
-        password: this.state.pw,
-        gender: this.state.gender,
-        country: this.state.country,
-        date: this.state.y + "-" + this.state.m + "-" + this.state.d
-      })
-      .then(req => {
-        if (JSON.stringify(req.data.success) == "false")
-          alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
-          alert("Signed Up Successfully! Now Login");
-          this.props.navigation.goBack();
-        }
-      })
-      .catch(() => alert("Connection Error"));
+    if (this.state.cpw == this.state.pw) {
+      axios
+        .post(this.url, {
+          first_name: this.state.fname,
+          last_name: this.state.lname,
+          email: this.state.email,
+          password: this.state.pw,
+          gender: this.state.gender,
+          country: this.state.country,
+          date: this.state.date
+        })
+        .then(req => {
+          if (JSON.stringify(req.data.success) == "false")
+            alert(JSON.stringify(req.data.errors));
+          else if (JSON.stringify(req.data.success) == "true") {
+            alert("Signed Up Successfully! Now Login");
+            this.props.navigation.goBack();
+          }
+        })
+        .catch(() => alert("Connection Error"));
+    } else alert("Passwords Doesnt Match");
   };
 }
 const styles = StyleSheet.create({

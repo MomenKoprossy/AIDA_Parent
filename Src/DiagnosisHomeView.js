@@ -4,7 +4,8 @@ import {
   AsyncStorage,
   RefreshControl,
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from "react-native";
 import {
   Container,
@@ -26,6 +27,7 @@ import { FloatingAction } from "react-native-floating-action";
 import axios from "react-native-axios";
 import { serverURL } from "./utils";
 import { ScrollView } from "react-native-gesture-handler";
+import { ProgressBar } from "react-native-multicolor-progress-bar";
 
 export default class DiagnosisHomeView extends React.Component {
   state = {
@@ -40,6 +42,36 @@ export default class DiagnosisHomeView extends React.Component {
   componentDidMount() {
     this.getRequests();
   }
+
+  progObj = res => {
+    if (res == null) return;
+    else {
+      var n = parseInt(res, 10);
+      var val = n / 10;
+      var c = "";
+      var r = "";
+      if (n < 6) {
+        c = "green";
+        r = " Not Autistic";
+      } else {
+        c = "red";
+        r = " Autistic: Visit a Doctor";
+      }
+      var ret = [{ color: c, value: val, nameToDisplay: r }];
+      return (
+        <CardItem>
+          <ProgressBar
+            arrayOfProgressObjects={ret}
+            parentViewStyle={{
+              width: 0.86 * Dimensions.get("window").width
+            }}
+            backgroundBarStyle={{ height: 20 }}
+            textStyle={{ fontSize: 14 }}
+          />
+        </CardItem>
+      );
+    }
+  };
 
   getRequests = () => {
     axios
@@ -160,10 +192,9 @@ export default class DiagnosisHomeView extends React.Component {
                   </Body>
                 </CardItem>
                 <CardItem>
-                  <Body>
-                    <Text>Result: {Req.result}/10</Text>
-                  </Body>
+                  <Text>Result: {Req.result}/10</Text>
                 </CardItem>
+                {this.progObj(Req.result)}
               </Card>
             ))}
           </ScrollView>

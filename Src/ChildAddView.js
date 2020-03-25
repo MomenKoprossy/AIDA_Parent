@@ -25,6 +25,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 import { serverURL } from "./utils";
 import axios from "react-native-axios";
+import DatePicker from "react-native-datepicker";
 
 export default class ChildAddView extends React.Component {
   state = {
@@ -32,9 +33,7 @@ export default class ChildAddView extends React.Component {
     fname: "",
     lname: "",
     gender: "",
-    y: "",
-    m: "",
-    d: ""
+    date: ""
   };
   componentDidMount() {
     this.CodeGen();
@@ -103,41 +102,22 @@ export default class ChildAddView extends React.Component {
                     />
                   </Picker>
                 </Item>
-                <Item
-                  fixedLabel
-                  style={(styles.item, { flexDirection: "row" })}
-                >
-                  <Label>Date of Birth:</Label>
-                  <Input
-                    type="number-pad"
-                    placeholder="DD"
-                    style={{
-                      width: 0.15 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ d: value })}
-                  />
-                  <Input
-                    type="number-pad"
-                    placeholder="MM"
-                    style={{
-                      width: 0.15 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ m: value })}
-                  />
-                  <Input
-                    placeholder="YYYY"
-                    type="number-pad"
-                    style={{
-                      width: 0.2 * Dimensions.get("window").width,
-                      marginRight: 15
-                    }}
-                    editable={true}
-                    onChangeText={value => this.setState({ y: value })}
-                  />
+                <Item fixedLabel style={styles.item}>
+                  <Label style={{ marginBottom: 15, marginTop: 10 }}>
+                    Date of Birth:
+                  </Label>
+                  <Left marginRight={20}>
+                    <DatePicker
+                      style={{ marginBottom: 15, marginTop: 10 }}
+                      placeholder="Select Date"
+                      date={this.state.date}
+                      confirmBtnText="Confirm"
+                      cancelBtnTestID="Cancel"
+                      onDateChange={date => {
+                        this.setState({ date: date });
+                      }}
+                    />
+                  </Left>
                 </Item>
               </Form>
               <View style={{ height: 60 }}></View>
@@ -173,7 +153,7 @@ export default class ChildAddView extends React.Component {
         first_name: this.state.fname,
         last_name: this.state.lname,
         gender: this.state.gender,
-        date: this.state.y + "-" + this.state.m + "-" + this.state.d
+        date: this.state.date
       })
       .then(req => {
         if (JSON.stringify(req.data.success) == "false")
