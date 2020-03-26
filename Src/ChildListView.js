@@ -18,6 +18,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FloatingAction } from "react-native-floating-action";
 import axios from "react-native-axios";
 import { serverURL } from "./utils";
+import { LoadingView } from "./LoadingView";
 
 export default class ChildListView extends React.Component {
   state = {
@@ -46,11 +47,7 @@ export default class ChildListView extends React.Component {
 
   render() {
     if (this.state.refresh) {
-      return (
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      );
+      return <LoadingView />;
     }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>

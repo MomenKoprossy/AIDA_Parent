@@ -131,7 +131,7 @@ export class LoginView extends React.Component {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.props.navigation.navigate("DiagnosisHome");
+          this.props.navigation.navigate("HomePage");
           this.saveLogin();
         }
       })

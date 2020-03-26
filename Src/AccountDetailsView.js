@@ -4,6 +4,7 @@ import {
   Dimensions,
   RefreshControl,
   ActivityIndicator,
+  KeyboardAvoidingView,
   View
 } from "react-native";
 import {
@@ -25,14 +26,55 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 import axios from "react-native-axios";
 import { serverURL } from "./utils";
+import DatePicker from "react-native-datepicker";
+import { LoadingView } from "./LoadingView";
 
 export default class AccountDetailsView extends React.Component {
   state = {
     Det: {},
-    refresh: true
+
+    refresh: true,
+
+    fname: null,
+    lname: null,
+    date: null,
+    pw: null,
+    cpw: null
   };
 
   url = serverURL + "get_user_data";
+  eurl = serverURL + "modifi_user_data";
+
+  sendEdit = () => {
+    var edit = {};
+    this.state.fname != this.state.Det.first_name && this.state.fname != null
+      ? (edit.firstname = this.state.fname)
+      : null;
+    this.state.pw != this.state.Det.password && this.state.pw != null
+      ? (edit.password = this.state.pw)
+      : null;
+    this.state.lname != this.state.Det.last_name && this.state.lname != null
+      ? (edit.lastname = this.state.lname)
+      : null;
+    this.state.date != this.state.Det.birth_date && this.state.date != null
+      ? (edit.date = this.state.date)
+      : null;
+    if (this.state.pw == this.state.cpw) {
+      axios
+        .post(this.eurl, edit)
+        .then(req => {
+          if (JSON.stringify(req.data.success) == "false")
+            alert(JSON.stringify(req.data.errors));
+          else if (JSON.stringify(req.data.success) == "true") {
+            alert("Account Edited Successfully");
+            this.props.navigation.goBack();
+          }
+        })
+        .catch(() => alert("Connection Error"));
+    } else {
+      alert("Password Doesnt Match");
+    }
+  };
 
   componentDidMount() {
     this.getDetails();
@@ -53,11 +95,7 @@ export default class AccountDetailsView extends React.Component {
 
   render() {
     if (this.state.refresh) {
-      return (
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      );
+      return <LoadingView />;
     }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
@@ -75,60 +113,128 @@ export default class AccountDetailsView extends React.Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.refresh}
-              onRefresh={() => this.getDetails()}
+              onRefresh={() => {
+                this.getDetails();
+                this.setState({
+                  fname: null,
+                  lname: null,
+                  date: null,
+                  pw: null,
+                  cpw: null
+                });
+              }}
             />
           }
           contentContainerStyle={styles.container}
         >
-          <ScrollView>
-            <Form>
-              <Item fixedLabel style={styles.item}>
-                <Label>First Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.Det.first_name}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Last Name:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.Det.last_name}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Email:</Label>
-                <Input
-                  type="email-address"
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.Det.email}
-                />
-              </Item>
-              <Item fixedLabel style={styles.item}>
-                <Label>Country:</Label>
-                <Input
-                  style={styles.input}
-                  editable={false}
-                  value={this.state.Det.country}
-                />
-              </Item>
-            </Form>
-            <Button
-              style={{
-                backgroundColor: "#c23fc4",
-                width: "60%",
-                justifyContent: "center",
-                alignSelf: "center"
-              }}
-              onPress={() => this.props.navigation.navigate("Edit")}
-            >
-              <Icon name="create" />
-              <Text>Edit</Text>
-            </Button>
-          </ScrollView>
+          <KeyboardAvoidingView enabled behavior="padding">
+            <ScrollView>
+              <Form>
+                <Item fixedLabel style={styles.item}>
+                  <Label>First Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    value={
+                      this.state.fname == null
+                        ? this.state.Det.first_name
+                        : this.state.fname
+                    }
+                    onChangeText={val => this.setState({ fname: val })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Last Name:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={true}
+                    value={
+                      this.state.lname == null
+                        ? this.state.Det.last_name
+                        : this.state.lname
+                    }
+                    onChangeText={val => this.setState({ lname: val })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Email:</Label>
+                  <Input
+                    type="email-address"
+                    style={styles.input}
+                    editable={false}
+                    value={this.state.Det.email}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Country:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={false}
+                    value={this.state.Det.country}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Gender:</Label>
+                  <Input
+                    style={styles.input}
+                    editable={false}
+                    value={this.state.Det.gender}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label style={{ marginBottom: 15, marginTop: 10 }}>
+                    Date of Birth:
+                  </Label>
+                  <Left marginRight={20}>
+                    <DatePicker
+                      style={{ marginBottom: 15, marginTop: 10 }}
+                      date={
+                        this.state.date == null
+                          ? this.state.Det.Birth_Date
+                          : this.state.date
+                      }
+                      confirmBtnText="Confirm"
+                      cancelBtnTestID="Cancel"
+                      onDateChange={date => {
+                        this.setState({ date: date });
+                      }}
+                    />
+                  </Left>
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>New Password:</Label>
+                  <Input
+                    password
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ pw: value })}
+                  />
+                </Item>
+                <Item fixedLabel style={styles.item}>
+                  <Label>Confirm Password:</Label>
+                  <Input
+                    password
+                    style={styles.input}
+                    editable={true}
+                    onChangeText={value => this.setState({ cpw: value })}
+                  />
+                </Item>
+                <View style={{ height: 60 }}></View>
+              </Form>
+              <Button
+                style={{
+                  backgroundColor: "#c23fc4",
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center"
+                }}
+                onPress={() => this.sendEdit()}
+              >
+                <Icon name="checkmark-circle-outline" />
+                <Text>Edit</Text>
+              </Button>
+            </ScrollView>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     );

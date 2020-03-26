@@ -32,7 +32,7 @@ export default class ChildAddView extends React.Component {
     cCode: "",
     fname: "",
     lname: "",
-    gender: "",
+    gender: "Male",
     date: ""
   };
   componentDidMount() {

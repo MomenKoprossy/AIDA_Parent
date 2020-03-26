@@ -10,29 +10,27 @@ import QuestionnaireView from "./Src/QuestionnaireView";
 import DiagnosisHomeView from "./Src/DiagnosisHomeView";
 import VideoUploadView from "./Src/VideoUploadView";
 import AccountDetailsView from "./Src/AccountDetailsView";
-import AccountEditView from "./Src/AccountEditView";
 import ChildDetailsView from "./Src/ChildDetailsView";
 import ChildListView from "./Src/ChildListView";
 import ChildAddView from "./Src/ChildAddView";
 import QMainView from "./Src/QMainView";
-import ChildEditView from "./Src/ChildEditView";
 import VSBeta from "./Src/VSBETA";
+import HomePageView from "./Src/HomePageView";
 
 const SNav = createStackNavigator(
   {
     //VS: { screen: VSBeta },
     Login: { screen: LoginView },
+    HomePage: { screen: HomePageView },
     SignUp: { screen: SignUpView },
     DiagnosisHome: { screen: DiagnosisHomeView },
     Upload: { screen: VideoUploadView },
     QMain: { screen: QMainView },
     Questionnaire: { screen: QuestionnaireView },
     Details: { screen: AccountDetailsView },
-    Edit: { screen: AccountEditView },
     CList: { screen: ChildListView },
     CDetails: { screen: ChildDetailsView },
-    CAdd: { screen: ChildAddView },
-    CEdit: { screen: ChildEditView }
+    CAdd: { screen: ChildAddView }
   },
   {
     headerMode: "none",

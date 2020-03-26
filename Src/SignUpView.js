@@ -35,7 +35,7 @@ export class SignUpView extends React.Component {
     lname: "",
     email: "",
     country: "",
-    gender: "",
+    gender: "Male",
     date: "",
     pw: "",
     cpw: "",

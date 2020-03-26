@@ -3,8 +3,6 @@ import {
   StyleSheet,
   AsyncStorage,
   RefreshControl,
-  View,
-  ActivityIndicator,
   Dimensions
 } from "react-native";
 import {
@@ -28,6 +26,7 @@ import axios from "react-native-axios";
 import { serverURL } from "./utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { ProgressBar } from "react-native-multicolor-progress-bar";
+import { LoadingView } from "./LoadingView";
 
 export default class DiagnosisHomeView extends React.Component {
   state = {
@@ -99,23 +98,9 @@ export default class DiagnosisHomeView extends React.Component {
       .catch(() => alert("Connection Error"));
   };
 
-  logout = async () => {
-    try {
-      await AsyncStorage.removeItem("login").then(() =>
-        this.props.navigation.goBack()
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   render() {
     if (this.state.refresh) {
-      return (
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      );
+      return <LoadingView />;
     }
     return (
       <Container style={styles.container}>
@@ -124,10 +109,10 @@ export default class DiagnosisHomeView extends React.Component {
             <Button
               transparent
               onPress={() => {
-                this.logout();
+                this.props.navigation.goBack();
               }}
             >
-              <Icon name="exit" />
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
