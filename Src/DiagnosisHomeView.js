@@ -76,9 +76,10 @@ export default class DiagnosisHomeView extends React.Component {
     axios
       .post(this.url)
       .then(req => {
-        if (JSON.stringify(req.data.success) == "false")
+        if (JSON.stringify(req.data.success) == "false") {
           alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
+          this.setState({ refresh: false });
+        } else if (JSON.stringify(req.data.success) == "true") {
           this.setState({ reqs: req.data.result, refresh: false });
         }
       })
@@ -116,7 +117,7 @@ export default class DiagnosisHomeView extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title style={{ alignSelf: "center" }}>Home Page</Title>
+            <Title style={{ alignSelf: "center" }}>Diagnosis Home</Title>
           </Body>
           <Right></Right>
         </Header>
@@ -187,13 +188,13 @@ export default class DiagnosisHomeView extends React.Component {
         <FloatingAction
           actions={[
             {
-              text: "Child List",
+              text: "Child Questionnaire",
               name: "c",
               color: "#c23fc4"
             },
             {
-              text: "Account Details",
-              name: "d",
+              text: "Video Analysis",
+              name: "v",
               color: "#c23fc4"
             },
             {
@@ -212,8 +213,9 @@ export default class DiagnosisHomeView extends React.Component {
               this.props.navigation.navigate("Questionnaire", {
                 ageGrp: "Adult"
               });
-            else if (name == "c") this.props.navigation.navigate("CList");
-            else if (name == "d") this.props.navigation.navigate("Details");
+            else if (name == "c")
+              this.props.navigation.navigate("CList", { next: "QMain" });
+            else if (name == "v") this.props.navigation.navigate("Upload");
             else if (name == "f")
               alert("Visit Our Website to use this feature!");
           }}

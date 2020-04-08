@@ -74,11 +74,19 @@ export default class ChildListView extends React.Component {
               <Card key={index}>
                 <CardItem
                   button
-                  onPress={() =>
-                    this.props.navigation.navigate("CDetails", {
-                      cCode: Child.child_code
-                    })
-                  }
+                  onPress={() => {
+                    if (this.props.navigation.state.params.next != null)
+                      this.props.navigation.navigate(
+                        this.props.navigation.state.params.next,
+                        {
+                          cCode: Child.child_code
+                        }
+                      );
+                    else
+                      this.props.navigation.navigate("CDetails", {
+                        cCode: Child.child_code
+                      });
+                  }}
                 >
                   <Text>{Child.first_name}</Text>
                 </CardItem>

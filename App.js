@@ -1,36 +1,87 @@
 import React from "react";
 import * as Font from "expo-font";
-import { createAppContainer } from "react-navigation";
+import { AsyncStorage } from "react-native";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import { LoadingView } from "./Src/LoadingView";
 import { LoginView } from "./Src/LoginView";
 import { SignUpView } from "./Src/SignUpView";
-import QuestionnaireView from "./Src/QuestionnaireView";
-import DiagnosisHomeView from "./Src/DiagnosisHomeView";
-import VideoUploadView from "./Src/VideoUploadView";
 import AccountDetailsView from "./Src/AccountDetailsView";
-import ChildDetailsView from "./Src/ChildDetailsView";
-import ChildListView from "./Src/ChildListView";
-import ChildAddView from "./Src/ChildAddView";
-import QMainView from "./Src/QMainView";
-import VSBeta from "./Src/VSBETA";
-import HomePageView from "./Src/HomePageView";
+import GetStartedView from "./Src/GetStartedView";
+import { Icon } from "native-base";
 
-const SNav = createStackNavigator(
+import ChildNav from "./Src/Navigation/ChildNav";
+import HomeNav from "./Src/Navigation/HomeNav";
+
+const SignoutScreen = () => {};
+
+const AppDrawer = createBottomTabNavigator(
   {
-    //VS: { screen: VSBeta },
+    HomePage: {
+      screen: HomeNav,
+      navigationOptions: {
+        tabBarLabel: "Home",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="home" style={{ color: tintColor }} />
+        )
+      }
+    },
+    Details: {
+      screen: AccountDetailsView,
+      navigationOptions: {
+        tabBarLabel: "Account Details",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="person" style={{ color: tintColor }} />
+        )
+      }
+    },
+    CList: {
+      screen: ChildNav,
+      navigationOptions: {
+        tabBarLabel: "Child List",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="people" style={{ color: tintColor }} />
+        )
+      }
+    },
+    Logout: {
+      screen: SignoutScreen,
+      navigationOptions: {
+        tabBarLabel: "Logout",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="log-out" style={{ color: tintColor }} />
+        ),
+        tabBarOnPress: async ({ navigation }) => {
+          try {
+            await AsyncStorage.removeItem("login").then(() =>
+              navigation.navigate("Auth")
+            );
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+    }
+  },
+  {
+    headerMode: "none",
+    navigationOptions: {
+      headerVisible: false
+    },
+    tabBarOptions: {
+      activeTintColor: "#c23fc4",
+      inactiveTintColor: "grey",
+      showIcon: true
+    }
+  }
+);
+
+const AuthStack = createStackNavigator(
+  {
     Login: { screen: LoginView },
-    HomePage: { screen: HomePageView },
-    SignUp: { screen: SignUpView },
-    DiagnosisHome: { screen: DiagnosisHomeView },
-    Upload: { screen: VideoUploadView },
-    QMain: { screen: QMainView },
-    Questionnaire: { screen: QuestionnaireView },
-    Details: { screen: AccountDetailsView },
-    CList: { screen: ChildListView },
-    CDetails: { screen: ChildDetailsView },
-    CAdd: { screen: ChildAddView }
+    SignUp: { screen: SignUpView }
   },
   {
     headerMode: "none",
@@ -40,12 +91,22 @@ const SNav = createStackNavigator(
   }
 );
 
-const Main = createAppContainer(SNav);
+const Main = createAppContainer(
+  createSwitchNavigator(
+    {
+      GetStarted: { screen: GetStartedView },
+      App: AppDrawer,
+      Auth: AuthStack
+    },
+    { initialRouteName: "GetStarted", headerMode: "none" }
+  )
+);
 
 export default class App extends React.Component {
   state = {
     loading: true
   };
+
   async componentDidMount() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),

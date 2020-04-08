@@ -26,10 +26,6 @@ export class LoginView extends React.Component {
 
   url = serverURL + "login";
 
-  componentDidMount() {
-    this.getLogin();
-  }
-
   toggleActive = name => {
     const { active } = this.state;
     active[name] = !active[name];
@@ -131,7 +127,7 @@ export class LoginView extends React.Component {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
-          this.props.navigation.navigate("HomePage");
+          this.props.navigation.navigate("App");
           this.saveLogin();
         }
       })
@@ -149,14 +145,14 @@ export class LoginView extends React.Component {
     } catch (error) {}
   };
 
-  getLogin = async () => {
-    try {
-      rero = await AsyncStorage.getItem("login");
-      info = JSON.parse(rero);
-      this.setState({ email: info.email, password: info.password });
-      this.loginRequest();
-    } catch (error) {}
-  };
+  // getLogin = async () => {
+  //   try {
+  //     rero = await AsyncStorage.getItem("login");
+  //     info = JSON.parse(rero);
+  //     this.setState({ email: info.email, password: info.password });
+  //     this.loginRequest();
+  //   } catch (error) {}
+  // };
 }
 
 const styles = StyleSheet.create({
