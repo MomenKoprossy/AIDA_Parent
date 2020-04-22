@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  Dimensions,
-  RefreshControl,
-} from "react-native";
+import { StyleSheet, Dimensions, RefreshControl } from "react-native";
 import {
   Container,
   Button,
@@ -204,8 +200,21 @@ export default class ChildDetailsView extends React.Component {
             <Icon name="checkmark-circle-outline" />
             <Text>Confrim</Text>
           </Button>
+          <Button
+            danger
+            style={{
+              marginTop: 20,
+              width: "60%",
+              justifyContent: "center",
+              alignSelf: "center"
+            }}
+            onPress={() => this.removeRequest(this.state.cDet.child_code)}
+          >
+            <Icon name="close" />
+            <Text>Remove Child</Text>
+          </Button>
         </Content>
-        <FloatingAction
+        {/* <FloatingAction
           actions={[
             {
               text: "Submit Questionnaire",
@@ -242,7 +251,7 @@ export default class ChildDetailsView extends React.Component {
               this.removeRequest(this.state.cDet.child_code);
           }}
           color="#c23fc4"
-        />
+        /> */}
       </Container>
     );
   }

@@ -45,12 +45,9 @@ export default class ChildListView extends React.Component {
       .catch(Error => alert(Error));
   };
 
-  render() {
-    if (this.state.refresh) {
-      return <LoadingView />;
-    }
-    return (
-      <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
+  renderHeader = () => {
+    if (this.props.navigation.state.params)
+      return (
         <Header style={{ backgroundColor: "#c23fc4" }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -61,6 +58,24 @@ export default class ChildListView extends React.Component {
             <Title> Child List </Title>
           </Body>
         </Header>
+      );
+    else
+      return (
+        <Header style={{ backgroundColor: "#c23fc4" }}>
+          <Body>
+            <Title style={{ alignSelf: "center" }}> Child List </Title>
+          </Body>
+        </Header>
+      );
+  };
+
+  render() {
+    if (this.state.refresh) {
+      return <LoadingView />;
+    }
+    return (
+      <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
+        {this.renderHeader()}
         <Content
           refreshControl={
             <RefreshControl
@@ -75,7 +90,7 @@ export default class ChildListView extends React.Component {
                 <CardItem
                   button
                   onPress={() => {
-                    if (this.props.navigation.state.params.next != null)
+                    if (this.props.navigation.state.params)
                       this.props.navigation.navigate(
                         this.props.navigation.state.params.next,
                         {

@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { LoadingView } from "./Src/LoadingView";
 import { LoginView } from "./Src/LoginView";
 import { SignUpView } from "./Src/SignUpView";
+import VSBeta from "./Src/VSBETA";
 import AccountDetailsView from "./Src/AccountDetailsView";
 import GetStartedView from "./Src/GetStartedView";
 import { Icon } from "native-base";
@@ -43,6 +44,15 @@ const AppDrawer = createBottomTabNavigator(
         tabBarLabel: "Child List",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="people" style={{ color: tintColor }} />
+        )
+      }
+    },
+    VS: {
+      screen: VSBeta,
+      navigationOptions: {
+        tabBarLabel: "VSBeta",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="calendar" style={{ color: tintColor }} />
         )
       }
     },

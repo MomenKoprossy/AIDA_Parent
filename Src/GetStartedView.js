@@ -128,7 +128,7 @@ export default class GetStartedView extends React.Component {
           this.props.navigation.navigate("App");
         }
       })
-      .catch(() => alert("Connection Error"));
+      .catch(error => alert(error));
   };
 
   getLogin = async () => {
