@@ -15,7 +15,7 @@ import {
   CardItem,
   H3,
   Thumbnail,
-  H2
+  H2,
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
@@ -103,7 +103,7 @@ export default class GetStartedView extends React.Component {
               backgroundColor: "#c23fc4",
               width: "95%",
               justifyContent: "center",
-              alignSelf: "center"
+              alignSelf: "center",
             }}
             onPress={() => this.getLogin()}
           >
@@ -118,9 +118,9 @@ export default class GetStartedView extends React.Component {
     axios
       .post(this.url, {
         email: email,
-        password: password
+        password: password,
       })
-      .then(req => {
+      .then((req) => {
         if (JSON.stringify(req.data.success) == "false") {
           alert(JSON.stringify(req.data.errors));
           this.props.navigation.navigate("Auth");
@@ -128,7 +128,7 @@ export default class GetStartedView extends React.Component {
           this.props.navigation.navigate("App");
         }
       })
-      .catch(error => alert(error));
+      .catch((error) => alert(error));
   };
 
   getLogin = async () => {
@@ -137,6 +137,7 @@ export default class GetStartedView extends React.Component {
       if (rero != null) {
         info = JSON.parse(rero);
         this.loginRequest(info.email, info.password);
+        console.log(this.url);
       } else this.props.navigation.navigate("Auth");
     } catch (error) {
       console.log(error);
@@ -147,6 +148,6 @@ export default class GetStartedView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight
-  }
+    paddingTop: Constants.statusBarHeight,
+  },
 });

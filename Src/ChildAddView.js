@@ -35,6 +35,7 @@ export default class ChildAddView extends React.Component {
     gender: "Male",
     date: ""
   };
+  
   componentDidMount() {
     this.CodeGen();
   }

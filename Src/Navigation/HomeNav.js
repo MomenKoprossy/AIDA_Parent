@@ -8,33 +8,35 @@ import QMainView from "../QMainView";
 import HomePageView from "../HomePageView";
 import ChildListView from "../ChildListView";
 import ChildAddView from "../ChildAddView";
+import PDFReaderView from "../PDFReaderView";
 
 const DStack = createStackNavigator(
   {
     HomePage: {
-      screen: HomePageView
+      screen: HomePageView,
     },
     DiagnosisHome: {
-      screen: DiagnosisHomeView
+      screen: DiagnosisHomeView,
     },
     Upload: {
-      screen: VideoUploadView
+      screen: VideoUploadView,
     },
     QMain: {
-      screen: QMainView
+      screen: QMainView,
     },
     Questionnaire: {
-      screen: QuestionnaireView
+      screen: QuestionnaireView,
     },
     CList: { screen: ChildListView },
-    CAdd: { screen: ChildAddView }
+    CAdd: { screen: ChildAddView },
+    PDF: { screen: PDFReaderView },
   },
   {
     headerMode: "none",
     navigationOptions: {
       headerVisible: false,
-      initialRouteName: "DiagnosisHome"
-    }
+      initialRouteName: "DiagnosisHome",
+    },
   }
 );
 

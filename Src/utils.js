@@ -6,4 +6,4 @@ export const HeaderHeight = theme.SIZES.BASE * 4 + StatusHeight;
 export const iPhoneX = () =>
   Platform.OS === "ios" && (height === 812 || width === 812);
 
-export const serverURL = "http://00188254.ngrok.io/";
+export const serverURL = "https://c64065e123ae.ngrok.io/";

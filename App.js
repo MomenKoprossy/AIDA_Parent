@@ -15,6 +15,7 @@ import { Icon } from "native-base";
 
 import ChildNav from "./Src/Navigation/ChildNav";
 import HomeNav from "./Src/Navigation/HomeNav";
+import CreateTaskView from "./Src/CreateTaskView";
 
 const SignoutScreen = () => {};
 
@@ -26,8 +27,8 @@ const AppDrawer = createBottomTabNavigator(
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="home" style={{ color: tintColor }} />
-        )
-      }
+        ),
+      },
     },
     Details: {
       screen: AccountDetailsView,
@@ -35,8 +36,8 @@ const AppDrawer = createBottomTabNavigator(
         tabBarLabel: "Account Details",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="person" style={{ color: tintColor }} />
-        )
-      }
+        ),
+      },
     },
     CList: {
       screen: ChildNav,
@@ -44,17 +45,17 @@ const AppDrawer = createBottomTabNavigator(
         tabBarLabel: "Child List",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="people" style={{ color: tintColor }} />
-        )
-      }
+        ),
+      },
     },
     VS: {
-      screen: VSBeta,
+      screen: CreateTaskView,
       navigationOptions: {
         tabBarLabel: "VSBeta",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="calendar" style={{ color: tintColor }} />
-        )
-      }
+        ),
+      },
     },
     Logout: {
       screen: SignoutScreen,
@@ -71,42 +72,42 @@ const AppDrawer = createBottomTabNavigator(
           } catch (error) {
             console.log(error);
           }
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     headerMode: "none",
     navigationOptions: {
-      headerVisible: false
+      headerVisible: false,
     },
     tabBarOptions: {
       activeTintColor: "#c23fc4",
       inactiveTintColor: "grey",
-      showIcon: true
-    }
+      showIcon: true,
+    },
   }
 );
 
 const AuthStack = createStackNavigator(
   {
     Login: { screen: LoginView },
-    SignUp: { screen: SignUpView }
+    SignUp: { screen: SignUpView },
   },
   {
     headerMode: "none",
     navigationOptions: {
-      headerVisible: false
-    }
+      headerVisible: false,
+    },
   }
 );
 
 const Main = createAppContainer(
   createSwitchNavigator(
     {
-      GetStarted: { screen: GetStartedView },
+      GetStarted: { screen: CreateTaskView },
       App: AppDrawer,
-      Auth: AuthStack
+      Auth: AuthStack,
     },
     { initialRouteName: "GetStarted", headerMode: "none" }
   )
@@ -114,13 +115,13 @@ const Main = createAppContainer(
 
 export default class App extends React.Component {
   state = {
-    loading: true
+    loading: true,
   };
 
   async componentDidMount() {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
     this.setState({ loading: false });
   }

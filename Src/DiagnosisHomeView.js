@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  AsyncStorage,
-  RefreshControl,
-  Dimensions
-} from "react-native";
+import { StyleSheet, RefreshControl, Dimensions } from "react-native";
 import {
   Container,
   Button,
@@ -18,7 +13,7 @@ import {
   Right,
   Content,
   Card,
-  CardItem
+  CardItem,
 } from "native-base";
 import Constants from "expo-constants";
 import { FloatingAction } from "react-native-floating-action";
@@ -32,17 +27,17 @@ export default class DiagnosisHomeView extends React.Component {
   state = {
     refresh: true,
     activeTab: "All",
-    reqs: []
+    reqs: [],
   };
 
   url = serverURL + "get_all_questionaire_data";
-  pdfurl = serverURL + "get_questionaire_report_pdf";
+  pdfurl = serverURL + "get_questionaire_report_pdf_app/";
 
   componentDidMount() {
     this.getRequests();
   }
 
-  progObj = res => {
+  progObj = (res) => {
     if (res == null) return;
     else {
       var n = parseInt(res, 10);
@@ -62,7 +57,7 @@ export default class DiagnosisHomeView extends React.Component {
           <ProgressBar
             arrayOfProgressObjects={ret}
             parentViewStyle={{
-              width: 0.86 * Dimensions.get("window").width
+              width: 0.86 * Dimensions.get("window").width,
             }}
             backgroundBarStyle={{ height: 20 }}
             textStyle={{ fontSize: 14 }}
@@ -75,7 +70,7 @@ export default class DiagnosisHomeView extends React.Component {
   getRequests = () => {
     axios
       .post(this.url)
-      .then(req => {
+      .then((req) => {
         if (JSON.stringify(req.data.success) == "false") {
           alert(JSON.stringify(req.data.errors));
           this.setState({ refresh: false });
@@ -86,17 +81,19 @@ export default class DiagnosisHomeView extends React.Component {
       .catch(() => alert("Connection Error"));
   };
 
-  getReport = questionaire_id => {
-    axios
-      .post(this.pdfurl, { questionaire_id: questionaire_id })
-      .then(req => {
-        if (JSON.stringify(req.data.success) == "false")
-          alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
-          //no idea
-        }
-      })
-      .catch(() => alert("Connection Error"));
+  //klaby
+  getReport = (questionaire_id) => {
+    axios(
+      {
+        url: this.pdfurl, //your url
+        method: "POST",
+        //responseType: "stream",
+        data: { questionaire_id: questionaire_id },
+      },
+      { questionaire_id: questionaire_id }
+    ).then((response) => {
+      this.props.navigation.navigate("PDF", { stream: response.data });
+    });
   };
 
   render() {
@@ -190,28 +187,28 @@ export default class DiagnosisHomeView extends React.Component {
             {
               text: "Child Questionnaire",
               name: "c",
-              color: "#c23fc4"
+              color: "#c23fc4",
             },
             {
               text: "Video Analysis",
               name: "v",
-              color: "#c23fc4"
+              color: "#c23fc4",
             },
             {
               text: "Adult Questionnaire",
               name: "q",
-              color: "#c23fc4"
+              color: "#c23fc4",
             },
             {
               text: "fMRI",
               name: "f",
-              color: "#c23fc4"
-            }
+              color: "#c23fc4",
+            },
           ]}
-          onPressItem={name => {
+          onPressItem={(name) => {
             if (name == "q")
               this.props.navigation.navigate("Questionnaire", {
-                ageGrp: "Adult"
+                ageGrp: "Adult",
               });
             else if (name == "c")
               this.props.navigation.navigate("CList", { next: "QMain" });
@@ -228,15 +225,15 @@ export default class DiagnosisHomeView extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight
+    paddingTop: Constants.statusBarHeight,
   },
   item: {
     margin: 8,
     fontSize: 18,
-    textAlign: "center"
+    textAlign: "center",
   },
   segbutton: {
     width: "34%",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
