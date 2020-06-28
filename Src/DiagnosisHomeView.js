@@ -85,14 +85,15 @@ export default class DiagnosisHomeView extends React.Component {
   getReport = (questionaire_id) => {
     axios(
       {
-        url: this.pdfurl, //your url
+        url: this.pdfurl,
         method: "POST",
-        //responseType: "stream",
         data: { questionaire_id: questionaire_id },
       },
       { questionaire_id: questionaire_id }
     ).then((response) => {
-      this.props.navigation.navigate("PDF", { stream: response.data });
+      this.props.navigation.navigate("PDF", {
+        stream: response.data,
+      });
     });
   };
 
@@ -199,11 +200,6 @@ export default class DiagnosisHomeView extends React.Component {
               name: "q",
               color: "#c23fc4",
             },
-            {
-              text: "fMRI",
-              name: "f",
-              color: "#c23fc4",
-            },
           ]}
           onPressItem={(name) => {
             if (name == "q")
@@ -212,9 +208,8 @@ export default class DiagnosisHomeView extends React.Component {
               });
             else if (name == "c")
               this.props.navigation.navigate("CList", { next: "QMain" });
-            else if (name == "v") this.props.navigation.navigate("Upload");
-            else if (name == "f")
-              alert("Visit Our Website to use this feature!");
+            else if (name == "v")
+              this.props.navigation.navigate("CList", { next: "Upload" });
           }}
           color="#c23fc4"
         />

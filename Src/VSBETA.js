@@ -15,11 +15,14 @@ import {
   Icon,
   Thumbnail,
   Right,
-  H3
+  H3,
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
+import * as FileSystem from "expo-file-system";
+import { serverURL } from "./utils";
 
 export default class VSBeta extends React.Component {
+  url = serverURL + "get_image";
   rewards = () => {
     var temp = [];
     temp = this.state.VS;
@@ -34,12 +37,13 @@ export default class VSBeta extends React.Component {
     );
   };
 
-  changeStatus = index => {
+  changeStatus = (index) => {
     var temp = [];
     temp = this.state.VS;
     temp[index].status = "done";
     if (temp[index + 1] != null) temp[index + 1].status = "next";
     this.setState({ VS: temp });
+    console.log(this.url);
   };
 
   renderTask = (task, index) => {
@@ -50,14 +54,14 @@ export default class VSBeta extends React.Component {
           style={{
             marginTop: 10,
             marginRight: 10,
-            marginLeft: 10
+            marginLeft: 10,
           }}
         >
           <CardItem bordered style={{ backgroundColor: "red" }}>
             <Left>
               <Thumbnail
                 square
-                source={{ uri: task.pic }}
+                source={{ uri: this.url }}
                 style={{ marginRight: 20 }}
               />
               <H3>{task.name}</H3>
@@ -75,7 +79,7 @@ export default class VSBeta extends React.Component {
           style={{
             marginTop: 10,
             marginRight: 10,
-            marginLeft: 10
+            marginLeft: 10,
           }}
         >
           <CardItem bordered style={{ backgroundColor: "green" }}>
@@ -100,14 +104,14 @@ export default class VSBeta extends React.Component {
           style={{
             marginTop: 10,
             marginRight: 10,
-            marginLeft: 10
+            marginLeft: 10,
           }}
         >
           <CardItem bordered>
             <Left>
               <Thumbnail
                 square
-                source={{ uri: task.pic }}
+                source={{ uri: this.url }}
                 style={{ marginRight: 20 }}
               />
               <H3>{task.name}</H3>
@@ -125,7 +129,7 @@ export default class VSBeta extends React.Component {
           style={{
             marginTop: 10,
             marginRight: 10,
-            marginLeft: 10
+            marginLeft: 10,
           }}
         >
           <CardItem bordered style={{ backgroundColor: "#c23fc4" }}>
@@ -141,11 +145,10 @@ export default class VSBeta extends React.Component {
           <CardItem bordered style={{ backgroundColor: "#fa66da" }}>
             <Image
               source={{
-                uri: task.pic,
-                flex: 1,
-                height: 200,
-                width: "100%"
+                uri: "http://6c42d235ad25.ngrok.io/get_image",
+                //method: "GET",
               }}
+              style={{ flex: 1, height: 200, width: 200 }}
             />
           </CardItem>
           <CardItem
@@ -157,7 +160,7 @@ export default class VSBeta extends React.Component {
                 backgroundColor: "#c23fc4",
                 width: "60%",
                 justifyContent: "center",
-                alignSelf: "center"
+                alignSelf: "center",
               }}
               onPress={() => this.changeStatus(index)}
             >
@@ -177,44 +180,44 @@ export default class VSBeta extends React.Component {
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "7:30",
-        status: "missed"
+        status: "missed",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "8:30",
-        status: "done"
+        status: "done",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "9:30",
-        status: "next"
+        status: "next",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "10:30",
-        status: "due"
+        status: "due",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "11:30",
-        status: "due"
+        status: "due",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "12:30",
-        status: "due"
-      }
-    ]
+        status: "due",
+      },
+    ],
   };
 
   render() {

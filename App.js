@@ -49,7 +49,7 @@ const AppDrawer = createBottomTabNavigator(
       },
     },
     VS: {
-      screen: CreateTaskView,
+      screen: VSBeta,
       navigationOptions: {
         tabBarLabel: "VSBeta",
         tabBarIcon: ({ tintColor }) => (
@@ -105,7 +105,7 @@ const AuthStack = createStackNavigator(
 const Main = createAppContainer(
   createSwitchNavigator(
     {
-      GetStarted: { screen: CreateTaskView },
+      GetStarted: { screen: GetStartedView },
       App: AppDrawer,
       Auth: AuthStack,
     },

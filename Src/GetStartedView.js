@@ -137,7 +137,6 @@ export default class GetStartedView extends React.Component {
       if (rero != null) {
         info = JSON.parse(rero);
         this.loginRequest(info.email, info.password);
-        console.log(this.url);
       } else this.props.navigation.navigate("Auth");
     } catch (error) {
       console.log(error);
