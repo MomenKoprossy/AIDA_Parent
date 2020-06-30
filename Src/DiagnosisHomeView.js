@@ -18,7 +18,7 @@ import {
 import Constants from "expo-constants";
 import { FloatingAction } from "react-native-floating-action";
 import axios from "react-native-axios";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import { ScrollView } from "react-native-gesture-handler";
 import { ProgressBar } from "react-native-multicolor-progress-bar";
 import { LoadingView } from "./LoadingView";
@@ -103,7 +103,7 @@ export default class DiagnosisHomeView extends React.Component {
     }
     return (
       <Container style={styles.container}>
-        <Header hasSegment style={{ backgroundColor: "#c23fc4" }}>
+        <Header hasSegment style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button
               transparent
@@ -119,7 +119,7 @@ export default class DiagnosisHomeView extends React.Component {
           </Body>
           <Right></Right>
         </Header>
-        {/* <Segment style={{ backgroundColor: "#c23fc4" }}>
+        {/* <Segment style={{ backgroundColor: Theme_color }}>
           <Button
             active={this.state.activeTab === "All"}
             onPress={() => {
@@ -188,17 +188,17 @@ export default class DiagnosisHomeView extends React.Component {
             {
               text: "Child Questionnaire",
               name: "c",
-              color: "#c23fc4",
+              color: Theme_color,
             },
             {
               text: "Video Analysis",
               name: "v",
-              color: "#c23fc4",
+              color: Theme_color,
             },
             {
               text: "Adult Questionnaire",
               name: "q",
-              color: "#c23fc4",
+              color: Theme_color,
             },
           ]}
           onPressItem={(name) => {
@@ -211,7 +211,7 @@ export default class DiagnosisHomeView extends React.Component {
             else if (name == "v")
               this.props.navigation.navigate("CList", { next: "Upload" });
           }}
-          color="#c23fc4"
+          color={Theme_color}
         />
       </Container>
     );

@@ -10,10 +10,11 @@ import {
   Content,
   Text,
   Icon,
-  Right
+  Right,
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Theme_color } from "./utils";
 
 export default class HomePageView extends Component {
   logout = async () => {
@@ -29,7 +30,7 @@ export default class HomePageView extends Component {
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Body>
             <Title style={{ alignSelf: "center" }}>Home Page</Title>
           </Body>
@@ -46,12 +47,15 @@ export default class HomePageView extends Component {
                   marginBottom: 10,
                   width: 80,
                   height: 80,
-                  marginStart: 15
+                  marginStart: 15,
                 }}
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{
+                  backgroundColor: Theme_color,
+                  justifyContent: "center",
+                }}
               >
                 <Text>Diagnosis</Text>
               </Button>
@@ -60,7 +64,7 @@ export default class HomePageView extends Component {
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("CList", {
-                  next: "VSBeta"
+                  next: "VSBeta",
                 })
               }
             >
@@ -70,12 +74,20 @@ export default class HomePageView extends Component {
                   marginBottom: 10,
                   width: 80,
                   height: 80,
-                  marginStart: 40
+                  marginStart: 40,
                 }}
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{
+                  backgroundColor: Theme_color,
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  this.props.navigation.navigate("CList", {
+                    next: "CVS",
+                  })
+                }
               >
                 <Text>Visual Scheduling</Text>
               </Button>
@@ -93,15 +105,15 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     padding: 10,
     flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   button: {
     marginBottom: 50,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   icon: {
     marginBottom: 10,
     width: 80,
-    height: 80
-  }
+    height: 80,
+  },
 });

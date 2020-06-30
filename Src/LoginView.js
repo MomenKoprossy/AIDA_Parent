@@ -10,7 +10,7 @@ import { Block, Button, Input, Text } from "galio-framework";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
 import axios from "react-native-axios";
-import { HeaderHeight, serverURL } from "./utils";
+import { HeaderHeight, serverURL, Theme_color } from "./utils";
 
 const { width } = Dimensions.get("window");
 
@@ -93,7 +93,7 @@ export class LoginView extends React.Component {
               <Block flex top style={{ marginTop: 20 }}>
                 <Button
                   shadowless
-                  color="#c23fc4"
+                  color={Theme_color}
                   style={{ height: 48 }}
                   onPress={() => this.loginRequest()}
                 >
@@ -104,7 +104,7 @@ export class LoginView extends React.Component {
                 </Text>
                 <Button
                   shadowless
-                  color="#c23fc4"
+                  color={Theme_color}
                   style={{ height: 48 }}
                   onPress={() => this.props.navigation.navigate("SignUp")}
                 >

@@ -18,7 +18,7 @@ import {
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "react-native-axios";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 
 export default class QuestionnaireView extends React.Component {
   state = {
@@ -42,7 +42,7 @@ export default class QuestionnaireView extends React.Component {
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
           alert("Questionnaire Submitted Successfully!");
-          this.props.navigation.goBack();
+          this.props.navigation.pop(3);
         }
       })
       .catch(Error => alert(Error));
@@ -186,7 +186,7 @@ export default class QuestionnaireView extends React.Component {
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -233,7 +233,7 @@ export default class QuestionnaireView extends React.Component {
           </ScrollView>
           <Button
             rounded
-            style={{ justifyContent: "center", backgroundColor: "#c23fc4" }}
+            style={{ justifyContent: "center", backgroundColor: Theme_color }}
             onPress={() => this.submitQues()}
           >
             <Text>Submit</Text>

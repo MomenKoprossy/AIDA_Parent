@@ -19,7 +19,7 @@ import {
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import axios from "react-native-axios";
 
 export default class GetStartedView extends React.Component {
@@ -27,7 +27,7 @@ export default class GetStartedView extends React.Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Header hasSegment style={{ backgroundColor: "#c23fc4" }}>
+        <Header hasSegment style={{ backgroundColor: Theme_color }}>
           <Left></Left>
           <Body>
             <Title style={{ alignSelf: "center" }}>Welcome To AIDA!</Title>
@@ -41,7 +41,7 @@ export default class GetStartedView extends React.Component {
                 <Left>
                   <Thumbnail square source={require("../assets/logo.png")} />
                   <Body>
-                    <H3 style={{ fontWeight: "bold", color: "#c23fc4" }}>
+                    <H3 style={{ fontWeight: "bold", color: Theme_color }}>
                       AIDA
                     </H3>
                     <Text note>Autism Integrated Diagnosis and Assistance</Text>
@@ -58,7 +58,7 @@ export default class GetStartedView extends React.Component {
             </Card>
             <Card>
               <CardItem bordered>
-                <H2 style={{ fontWeight: "bold", color: "#c23fc4" }}>
+                <H2 style={{ fontWeight: "bold", color: Theme_color }}>
                   What exactly do we offer?
                 </H2>
               </CardItem>
@@ -71,11 +71,11 @@ export default class GetStartedView extends React.Component {
                     source={require("../assets/appraisal-form.png")}
                   />
                   <Body>
-                    <H3 style={{ fontWeight: "bold", color: "#c23fc4" }}>
+                    <H3 style={{ fontWeight: "bold", color: Theme_color }}>
                       Diagnosis
                     </H3>
                     <Text note>
-                      through Questionnaire, Video Analysis and fMRI.
+                      through Questionnaire and Video Analysis.
                     </Text>
                   </Body>
                 </Left>
@@ -86,11 +86,11 @@ export default class GetStartedView extends React.Component {
                 <Left>
                   <Thumbnail square source={require("../assets/support.png")} />
                   <Body>
-                    <H3 style={{ fontWeight: "bold", color: "#c23fc4" }}>
+                    <H3 style={{ fontWeight: "bold", color: Theme_color }}>
                       Assistance (AIDA Child)
                     </H3>
                     <Text note>
-                      Social Stories, Visual Schedules, AAC and games.
+                      Social Stories, Visual Schedules and AAC.
                     </Text>
                   </Body>
                 </Left>
@@ -100,7 +100,7 @@ export default class GetStartedView extends React.Component {
           <Button
             style={{
               marginVertical: 20,
-              backgroundColor: "#c23fc4",
+              backgroundColor: Theme_color,
               width: "95%",
               justifyContent: "center",
               alignSelf: "center",

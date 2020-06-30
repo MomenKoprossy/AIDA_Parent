@@ -20,11 +20,12 @@ import {
   Form,
   Item,
   Label,
+  Picker,
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import axios from "react-native-axios";
 import DatePicker from "react-native-datepicker";
 import Tags from "react-native-tags";
@@ -38,6 +39,10 @@ export default class CreateTaskView extends React.Component {
     duration: { h: "", m: "" },
     uri:
       "https://www.dcrc.co/wp-content/uploads/2019/04/blank-head-profile-pic-for-a-man.jpg",
+    repeat: "D",
+    selected: "",
+    picName: "",
+    type: "",
   };
 
   selectImage = async () => {
@@ -49,8 +54,14 @@ export default class CreateTaskView extends React.Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ uri: "data:image/png;base64," + result.base64 });
-      //console.log(result.base64)
+      var parts = result.uri.split("/");
+      var type = result.uri.split(".");
+      this.setState({
+        selected: result.uri,
+        picName: parts[parts.length - 1],
+        type: type[type.length - 1],
+        uri: result.base64,
+      });
     }
   };
 
@@ -63,14 +74,13 @@ export default class CreateTaskView extends React.Component {
     var h = part[0];
     var m = part[1];
 
-    this.setState({ duration: { h: h, m: m } });
-    //console.log(this.state.duration);
+    this.setState({ duration: JSON.stringify({ h: h, m: m }) });
   }
 
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -95,7 +105,7 @@ export default class CreateTaskView extends React.Component {
                         alignSelf: "center",
                       }}
                       source={{
-                        uri: this.state.uri,
+                        uri: `data:image/${this.state.type};base64,${this.state.uri}`,
                       }}
                     />
                   </TouchableOpacity>
@@ -162,6 +172,21 @@ export default class CreateTaskView extends React.Component {
                     />
                   </Left>
                 </Item>
+                <Item
+                  fixedLabel
+                  picker
+                  style={(styles.item, { marginLeft: 15 })}
+                >
+                  <Label>Repetition:</Label>
+                  <Picker
+                    selectedValue={this.state.repeat}
+                    mode="dropdown"
+                    onValueChange={(value) => this.setState({ repeat: value })}
+                  >
+                    <Picker.Item label="Daily" value="D" />
+                    <Picker.Item label="Monthly" value="M" />
+                  </Picker>
+                </Item>
                 <Item fixedLabel style={styles.item}>
                   <Label style={{ marginBottom: 15, marginTop: 10 }}>
                     Tags:
@@ -178,7 +203,7 @@ export default class CreateTaskView extends React.Component {
               <View style={{ height: 60 }}></View>
               <Button
                 style={{
-                  backgroundColor: "#c23fc4",
+                  backgroundColor: Theme_color,
                   width: "60%",
                   justifyContent: "center",
                   alignSelf: "center",
@@ -197,16 +222,47 @@ export default class CreateTaskView extends React.Component {
   }
 
   addTaskRequest = () => {
+    var data = new FormData();
+    data.append("file", {
+      uri: this.state.selected,
+      type: "image/jpg",
+      // type: `image/${this.state.type}`,
+      name: this.state.picName,
+    });
+    var fields = {
+      date: this.state.date,
+      time: this.state.time,
+      duration: this.state.duration,
+      child_id: this.props.navigation.state.params.cCode,
+      name: this.state.name,
+      //public_tags: this.tags,
+      repeat: this.state.repeat,
+    };
+    data.append("fields", JSON.stringify(fields));
+    console.log(data);
+
     axios
-      .post(this.url, {})
+      .post(this.url, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          var percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(progressEvent);
+        },
+      })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
-        else if (JSON.stringify(req.data.success) == "true") {
-          alert("Task Added Successfully!");
-        }
+        else JSON.stringify(req.data.success) == "true";
+        alert("All Done! Wait for Result");
+        this.props.navigation.pop(2);
       })
-      .catch(() => alert("Connection Error"));
+      .catch((error) => {
+        alert(error);
+      });
   };
 }
 

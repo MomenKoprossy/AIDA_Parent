@@ -11,19 +11,19 @@ import {
   CardItem,
   Text,
   Left,
-  Icon
+  Icon,
 } from "native-base";
 import { RefreshControl, ActivityIndicator, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { FloatingAction } from "react-native-floating-action";
 import axios from "react-native-axios";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import { LoadingView } from "./LoadingView";
 
 export default class ChildListView extends React.Component {
   state = {
     Children: [],
-    refresh: true
+    refresh: true,
   };
 
   url = serverURL + "get_all_child_data";
@@ -35,20 +35,20 @@ export default class ChildListView extends React.Component {
   getChildList = () => {
     axios
       .post(this.url)
-      .then(req => {
+      .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
           this.setState({ Children: req.data.result, refresh: false });
         }
       })
-      .catch(Error => alert(Error));
+      .catch((Error) => alert(Error));
   };
 
   renderHeader = () => {
     if (this.props.navigation.state.params)
       return (
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -61,7 +61,7 @@ export default class ChildListView extends React.Component {
       );
     else
       return (
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Body>
             <Title style={{ alignSelf: "center" }}> Child List </Title>
           </Body>
@@ -94,12 +94,12 @@ export default class ChildListView extends React.Component {
                       this.props.navigation.navigate(
                         this.props.navigation.state.params.next,
                         {
-                          cCode: Child.child_code
+                          cCode: Child.child_id,
                         }
                       );
                     else
                       this.props.navigation.navigate("CDetails", {
-                        cCode: Child.child_code
+                        cCode: Child.child_code,
                       });
                   }}
                 >
@@ -112,7 +112,7 @@ export default class ChildListView extends React.Component {
         <FloatingAction
           onPressMain={() => this.props.navigation.navigate("CAdd")}
           animated={false}
-          color="#c23fc4"
+          color={Theme_color}
           showBackground={false}
         />
       </Container>

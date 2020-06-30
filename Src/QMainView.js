@@ -9,16 +9,17 @@ import {
   Title,
   Content,
   Text,
-  Icon
+  Icon,
 } from "native-base";
 import Constants from "expo-constants";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Theme_color } from "./utils";
 
 export default class QMainView extends Component {
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -35,7 +36,7 @@ export default class QMainView extends Component {
               onPress={() =>
                 this.props.navigation.navigate("Questionnaire", {
                   ageGrp: "Toddler",
-                  cCode: this.props.navigation.state.params.cCode
+                  cCode: this.props.navigation.state.params.cCode,
                 })
               }
             >
@@ -45,12 +46,15 @@ export default class QMainView extends Component {
                   marginBottom: 10,
                   width: 80,
                   height: 80,
-                  marginStart: 6
+                  marginStart: 6,
                 }}
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{
+                  backgroundColor: Theme_color,
+                  justifyContent: "center",
+                }}
               >
                 <Text>Toddler</Text>
               </Button>
@@ -60,7 +64,7 @@ export default class QMainView extends Component {
               onPress={() => {
                 this.props.navigation.navigate("Questionnaire", {
                   ageGrp: "Child",
-                  cCode: this.props.navigation.state.params.cCode
+                  cCode: this.props.navigation.state.params.cCode,
                 });
               }}
             >
@@ -70,12 +74,15 @@ export default class QMainView extends Component {
                   marginBottom: 10,
                   width: 80,
                   height: 80,
-                  marginStart: 7
+                  marginStart: 7,
                 }}
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{
+                  backgroundColor: Theme_color,
+                  justifyContent: "center",
+                }}
               >
                 <Text>Child</Text>
               </Button>
@@ -85,7 +92,7 @@ export default class QMainView extends Component {
               onPress={() =>
                 this.props.navigation.navigate("Questionnaire", {
                   ageGrp: "Adolescent",
-                  cCode: this.props.navigation.state.params.cCode
+                  cCode: this.props.navigation.state.params.cCode,
                 })
               }
             >
@@ -95,12 +102,15 @@ export default class QMainView extends Component {
                   marginBottom: 10,
                   width: 80,
                   height: 80,
-                  marginStart: 18
+                  marginStart: 18,
                 }}
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{
+                  backgroundColor: Theme_color,
+                  justifyContent: "center",
+                }}
               >
                 <Text>Adolescent</Text>
               </Button>
@@ -124,7 +134,7 @@ export default class QMainView extends Component {
               />
               <Button
                 rounded
-                style={{ backgroundColor: "#c23fc4", justifyContent: "center" }}
+                style={{ backgroundColor: Theme_color, justifyContent: "center" }}
               >
                 <Text>Adult</Text>
               </Button>
@@ -142,15 +152,15 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     padding: 10,
     flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   button: {
     marginBottom: 50,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   icon: {
     marginBottom: 10,
     width: 80,
-    height: 80
-  }
+    height: 80,
+  },
 });

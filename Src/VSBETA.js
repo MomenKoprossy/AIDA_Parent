@@ -18,8 +18,7 @@ import {
   H3,
 } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
-import * as FileSystem from "expo-file-system";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 
 export default class VSBeta extends React.Component {
   url = serverURL + "get_image";
@@ -35,6 +34,24 @@ export default class VSBeta extends React.Component {
         {rewards}/{temp.length}
       </Text>
     );
+  };
+
+  renderRepeat = (task) => {
+    if (task.repeat == null)
+      return (
+        <Body>
+          <H3>{task.name}</H3>
+        </Body>
+      );
+    else
+      return (
+        <Body>
+          <H3>{task.name}</H3>
+          <Text note style={{ color: "white" }}>
+            Repeat: {task.repeat}
+          </Text>
+        </Body>
+      );
   };
 
   changeStatus = (index) => {
@@ -64,10 +81,11 @@ export default class VSBeta extends React.Component {
                 source={{ uri: this.url }}
                 style={{ marginRight: 20 }}
               />
-              <H3>{task.name}</H3>
+              {this.renderRepeat(task)}
             </Left>
-            <Right>
-              <H3>{task.time}</H3>
+            <Right style={{ flexDirection: "column" }}>
+              <Text>Start: {task.time}</Text>
+              <Text>End: {task.end}</Text>
             </Right>
           </CardItem>
         </Card>
@@ -89,7 +107,7 @@ export default class VSBeta extends React.Component {
                 source={{ uri: task.pic }}
                 style={{ marginRight: 20 }}
               />
-              <H3>{task.name}</H3>
+              {this.renderRepeat(task)}
             </Left>
             <Right>
               <H3>{task.time}</H3>
@@ -114,7 +132,7 @@ export default class VSBeta extends React.Component {
                 source={{ uri: this.url }}
                 style={{ marginRight: 20 }}
               />
-              <H3>{task.name}</H3>
+              {this.renderRepeat(task)}
             </Left>
             <Right>
               <H3>{task.time}</H3>
@@ -132,7 +150,7 @@ export default class VSBeta extends React.Component {
             marginLeft: 10,
           }}
         >
-          <CardItem bordered style={{ backgroundColor: "#c23fc4" }}>
+          <CardItem bordered style={{ backgroundColor: "#371796" }}>
             <Left>
               <Body>
                 <H3 style={{ color: "white" }}>{task.name}</H3>
@@ -142,22 +160,21 @@ export default class VSBeta extends React.Component {
               </Right>
             </Left>
           </CardItem>
-          <CardItem bordered style={{ backgroundColor: "#fa66da" }}>
+          <CardItem bordered style={{ backgroundColor: Theme_color }}>
             <Image
               source={{
                 uri: "http://6c42d235ad25.ngrok.io/get_image",
-                //method: "GET",
               }}
               style={{ flex: 1, height: 200, width: 200 }}
             />
           </CardItem>
           <CardItem
             justifyContent="center"
-            style={{ backgroundColor: "#fa66da" }}
+            style={{ backgroundColor: "#371796" }}
           >
             <Button
               style={{
-                backgroundColor: "#c23fc4",
+                backgroundColor: Theme_color,
                 width: "60%",
                 justifyContent: "center",
                 alignSelf: "center",
@@ -180,42 +197,54 @@ export default class VSBeta extends React.Component {
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "7:30",
+        end: "8:00",
         status: "missed",
+        repeat: "Daily",
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "8:30",
+        end: "9:00",
         status: "done",
+        repeat: null,
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "9:30",
+        end: "10:00",
         status: "next",
+        repeat: null,
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
         time: "10:30",
+        end: "11:00",
         status: "due",
+        repeat: null,
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
-        time: "11:30",
+        time: "7:30",
+        end: "8:00",
         status: "due",
+        repeat: null,
       },
       {
         name: "Ride School Bus",
         pic:
           "https://i.pinimg.com/originals/95/e3/65/95e365705c7a7b977b74a182f89c7ca9.png",
-        time: "12:30",
+        time: "7:30",
+        end: "8:00",
         status: "due",
+        repeat: null,
       },
     ],
   };
@@ -223,7 +252,7 @@ export default class VSBeta extends React.Component {
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight, flex: 1 }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />

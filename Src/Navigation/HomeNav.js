@@ -9,6 +9,8 @@ import HomePageView from "../HomePageView";
 import ChildListView from "../ChildListView";
 import ChildAddView from "../ChildAddView";
 import PDFReaderView from "../PDFReaderView";
+import ChildVSView from "../ChildVSView";
+import CreateTaskView from "../CreateTaskView";
 
 const DStack = createStackNavigator(
   {
@@ -30,6 +32,7 @@ const DStack = createStackNavigator(
     CList: { screen: ChildListView },
     CAdd: { screen: ChildAddView },
     PDF: { screen: PDFReaderView },
+    CVS: { screen: ChildVSView },
   },
   {
     headerMode: "none",

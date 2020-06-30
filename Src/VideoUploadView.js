@@ -50,11 +50,10 @@ export default class VideoUploadView extends React.Component {
     var vid = new FormData();
     vid.append("file", {
       uri: this.state.selected,
-      type: "video/mp4",
+      type: `video/${this.state.type}`,
       name: this.state.vidName,
     });
     vid.append("child_code", this.props.navigation.state.params.cCode);
-    console.log(vid);
 
     axios
       .post(this.url, vid, {
@@ -65,12 +64,15 @@ export default class VideoUploadView extends React.Component {
           var percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          console.log(progressEvent.loaded);
+          console.log(progressEvent);
         },
       })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
+        else JSON.stringify(req.data.success) == "true";
+        alert("All Done! Wait for Result");
+        this.props.navigation.pop(2)
       })
       .catch((error) => {
         alert("Connection Error");

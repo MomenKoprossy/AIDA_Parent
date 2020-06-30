@@ -18,7 +18,7 @@ import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
 import axios from "react-native-axios";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import { FloatingAction } from "react-native-floating-action";
 import DatePicker from "react-native-datepicker";
 import { LoadingView } from "./LoadingView";
@@ -100,7 +100,7 @@ export default class ChildDetailsView extends React.Component {
     }
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -190,7 +190,7 @@ export default class ChildDetailsView extends React.Component {
           </ScrollView>
           <Button
             style={{
-              backgroundColor: "#c23fc4",
+              backgroundColor: Theme_color,
               width: "60%",
               justifyContent: "center",
               alignSelf: "center"
@@ -219,17 +219,17 @@ export default class ChildDetailsView extends React.Component {
             {
               text: "Submit Questionnaire",
               name: "q",
-              color: "#c23fc4"
+              color: Theme_color
             },
             {
               text: "Video Analysis",
               name: "va",
-              color: "#c23fc4"
+              color: Theme_color
             },
             {
               text: "Visual Schedules",
               name: "vs",
-              color: "#c23fc4"
+              color: Theme_color
             },
             {
               text: "Remove Child",
@@ -250,7 +250,7 @@ export default class ChildDetailsView extends React.Component {
             else if (name == "r")
               this.removeRequest(this.state.cDet.child_code);
           }}
-          color="#c23fc4"
+          color=Theme_color
         /> */}
       </Container>
     );

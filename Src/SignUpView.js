@@ -24,7 +24,7 @@ import {
 import Constants from "expo-constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "galio-framework";
-import { serverURL } from "./utils";
+import { serverURL, Theme_color } from "./utils";
 import axios from "react-native-axios";
 import CountryPicker from "react-native-country-picker-modal";
 import DatePicker from "react-native-datepicker";
@@ -47,7 +47,7 @@ export class SignUpView extends React.Component {
   render() {
     return (
       <Container style={{ paddingTop: Constants.statusBarHeight }}>
-        <Header style={{ backgroundColor: "#c23fc4" }}>
+        <Header style={{ backgroundColor: Theme_color }}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -163,7 +163,7 @@ export class SignUpView extends React.Component {
               </Form>
               <Button
                 style={{
-                  backgroundColor: "#c23fc4",
+                  backgroundColor: Theme_color,
                   width: "60%",
                   justifyContent: "center",
                   alignSelf: "center"

@@ -7,4 +7,4 @@ export const iPhoneX = () =>
   Platform.OS === "ios" && (height === 812 || width === 812);
 
 export const serverURL = "http://e6d9218909f3.ngrok.io/";
-export const Theme_color = "#c23fc4";
+export const Theme_color = "#6026ff";

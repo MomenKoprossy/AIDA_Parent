@@ -1,7 +1,11 @@
 import React from "react";
 import * as Font from "expo-font";
 import { AsyncStorage } from "react-native";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import {
+  createAppContainer,
+  createSwitchNavigator,
+  ThemeColors,
+} from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
@@ -15,7 +19,9 @@ import { Icon } from "native-base";
 
 import ChildNav from "./Src/Navigation/ChildNav";
 import HomeNav from "./Src/Navigation/HomeNav";
+import VSNav from "./Src/Navigation/VSNav";
 import CreateTaskView from "./Src/CreateTaskView";
+import { Theme_color } from "./Src/utils";
 
 const SignoutScreen = () => {};
 
@@ -49,7 +55,7 @@ const AppDrawer = createBottomTabNavigator(
       },
     },
     VS: {
-      screen: VSBeta,
+      screen: CreateTaskView,
       navigationOptions: {
         tabBarLabel: "VSBeta",
         tabBarIcon: ({ tintColor }) => (
@@ -82,7 +88,7 @@ const AppDrawer = createBottomTabNavigator(
       headerVisible: false,
     },
     tabBarOptions: {
-      activeTintColor: "#c23fc4",
+      activeTintColor: Theme_color,
       inactiveTintColor: "grey",
       showIcon: true,
     },
