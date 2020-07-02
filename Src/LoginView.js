@@ -4,13 +4,14 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Image,
-  AsyncStorage
+  AsyncStorage,
 } from "react-native";
 import { Block, Button, Input, Text } from "galio-framework";
 import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
 import axios from "react-native-axios";
 import { HeaderHeight, serverURL, Theme_color } from "./utils";
+import { View } from "native-base";
 
 const { width } = Dimensions.get("window");
 
@@ -20,13 +21,13 @@ export class LoginView extends React.Component {
     password: "",
     active: {
       email: false,
-      password: false
-    }
+      password: false,
+    },
   };
 
   url = serverURL + "login";
 
-  toggleActive = name => {
+  toggleActive = (name) => {
     const { active } = this.state;
     active[name] = !active[name];
 
@@ -36,11 +37,11 @@ export class LoginView extends React.Component {
     return (
       <LinearGradient
         locations={[0.1, 1]}
-        colors={["#ffffff", "#e85fc8"]}
+        colors={["#ffffff", "#371796"]}
         style={{
           marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
           flex: 1,
-          paddingTop: Constants.statusBarHeight
+          paddingTop: Constants.statusBarHeight,
         }}
       >
         <Block flex middle>
@@ -49,10 +50,10 @@ export class LoginView extends React.Component {
               <Block
                 center
                 style={{
-                  marginTop: 250,
+                  marginTop: 200,
                   shadowColor: "#202020",
                   shadowOffset: { width: 0, height: 0 },
-                  shadowRadius: 5
+                  shadowRadius: 5,
                 }}
               >
                 <Image source={require("../assets/logo.png")} />
@@ -69,10 +70,10 @@ export class LoginView extends React.Component {
                   bgColor="transparent"
                   onBlur={() => this.toggleActive("email")}
                   onFocus={() => this.toggleActive("email")}
-                  onChangeText={text => this.setState({ email: text })}
+                  onChangeText={(text) => this.setState({ email: text })}
                   style={[
                     styles.input,
-                    this.state.active.email ? styles.inputActive : null
+                    this.state.active.email ? styles.inputActive : null,
                   ]}
                 />
                 <Input
@@ -83,10 +84,10 @@ export class LoginView extends React.Component {
                   bgColor="transparent"
                   onBlur={() => this.toggleActive("password")}
                   onFocus={() => this.toggleActive("password")}
-                  onChangeText={text => this.setState({ password: text })}
+                  onChangeText={(text) => this.setState({ password: text })}
                   style={[
                     styles.input,
-                    this.state.active.password ? styles.inputActive : null
+                    this.state.active.password ? styles.inputActive : null,
                   ]}
                 />
               </Block>
@@ -112,6 +113,7 @@ export class LoginView extends React.Component {
                 </Button>
               </Block>
             </Block>
+            <View style={{ height: 25 }}></View>
           </KeyboardAvoidingView>
         </Block>
       </LinearGradient>
@@ -121,9 +123,9 @@ export class LoginView extends React.Component {
     axios
       .post(this.url, {
         email: this.state.email,
-        password: this.state.password
+        password: this.state.password,
       })
-      .then(req => {
+      .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
         else if (JSON.stringify(req.data.success) == "true") {
@@ -160,9 +162,9 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     borderRadius: 0,
     borderBottomWidth: 1,
-    borderBottomColor: "#727276"
+    borderBottomColor: "#727276",
   },
   inputActive: {
-    borderBottomColor: "white"
-  }
+    borderBottomColor: "white",
+  },
 });

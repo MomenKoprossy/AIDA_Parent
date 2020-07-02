@@ -33,6 +33,7 @@ const DStack = createStackNavigator(
     CAdd: { screen: ChildAddView },
     PDF: { screen: PDFReaderView },
     CVS: { screen: ChildVSView },
+    TAdd: { screen: CreateTaskView },
   },
   {
     headerMode: "none",

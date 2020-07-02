@@ -21,7 +21,6 @@ import { RefreshControl } from "react-native";
 import axios from "react-native-axios";
 import Constants from "expo-constants";
 
-
 export default class ChildVSView extends React.Component {
   url = serverURL + "get_all_child_task_data";
   picurl = serverURL + "get_task_image?task_id=";
@@ -44,19 +43,19 @@ export default class ChildVSView extends React.Component {
       .catch(() => alert("Connection Error"));
   };
 
-  rewards = () => {
-    var temp = [];
-    temp = this.state.VS;
-    var rewards = 0;
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i].state == "done") rewards++;
-    }
-    return (
-      <Text style={{ marginRight: 10, color: "gold" }}>
-        {rewards}/{temp.length}
-      </Text>
-    );
-  };
+  // rewards = () => {
+  //   var temp = [];
+  //   temp = this.state.VS;
+  //   var rewards = 0;
+  //   for (var i = 0; i < temp.length; i++) {
+  //     if (temp[i].state == "done") rewards++;
+  //   }
+  //   return (
+  //     <Text style={{ marginRight: 10, color: "gold" }}>
+  //       {rewards}/{temp.length}
+  //     </Text>
+  //   );
+  // };
 
   renderRepeat = (task) => {
     if (task.repeat == null)
@@ -102,7 +101,7 @@ export default class ChildVSView extends React.Component {
             <Left>
               <Thumbnail
                 square
-                source={{ uri: this.picurl + task.task_id }}
+                source={{ uri: `${this.picurl}${task.task_id}` }}
                 style={{ marginRight: 20 }}
               />
               {this.renderRepeat(task)}
@@ -133,7 +132,7 @@ export default class ChildVSView extends React.Component {
             <Left>
               <Thumbnail
                 square
-                source={{ uri: task.pic }}
+                source={{ uri: `${this.picurl}${task.task_id}` }}
                 style={{ marginRight: 20 }}
               />
               {this.renderRepeat(task)}
@@ -145,7 +144,7 @@ export default class ChildVSView extends React.Component {
           </CardItem>
         </Card>
       );
-    } else if (task.state == "due") {
+    } else if (task.state == "due" || task.state == "TBD") {
       return (
         <Card
           key={index}
@@ -230,8 +229,18 @@ export default class ChildVSView extends React.Component {
             <Title style={{ alignSelf: "center" }}> Visual Schedule </Title>
           </Body>
           <Right>
-            {this.rewards()}
-            <Icon name="star" style={{ color: "gold" }} />
+            <Button
+              backgroundColor="#371796"
+              onPress={() =>
+                this.props.navigation.navigate("TAdd", {
+                  cCode: this.props.navigation.state.params.cCode,
+                })
+              }
+              padder
+            >
+              <Text>Add Task</Text>
+              <Icon name="add" style={{ color: "white" }} />
+            </Button>
           </Right>
         </Header>
         <Content

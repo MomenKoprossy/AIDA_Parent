@@ -1,25 +1,19 @@
 import React from "react";
 import * as Font from "expo-font";
 import { AsyncStorage } from "react-native";
-import {
-  createAppContainer,
-  createSwitchNavigator,
-  ThemeColors,
-} from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import { LoadingView } from "./Src/LoadingView";
 import { LoginView } from "./Src/LoginView";
 import { SignUpView } from "./Src/SignUpView";
-import VSBeta from "./Src/VSBETA";
 import AccountDetailsView from "./Src/AccountDetailsView";
 import GetStartedView from "./Src/GetStartedView";
 import { Icon } from "native-base";
 
 import ChildNav from "./Src/Navigation/ChildNav";
 import HomeNav from "./Src/Navigation/HomeNav";
-import VSNav from "./Src/Navigation/VSNav";
 import CreateTaskView from "./Src/CreateTaskView";
 import { Theme_color } from "./Src/utils";
 
@@ -51,15 +45,6 @@ const AppDrawer = createBottomTabNavigator(
         tabBarLabel: "Child List",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="people" style={{ color: tintColor }} />
-        ),
-      },
-    },
-    VS: {
-      screen: CreateTaskView,
-      navigationOptions: {
-        tabBarLabel: "VSBeta",
-        tabBarIcon: ({ tintColor }) => (
-          <Icon name="calendar" style={{ color: tintColor }} />
         ),
       },
     },
