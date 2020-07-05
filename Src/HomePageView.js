@@ -64,7 +64,7 @@ export default class HomePageView extends Component {
               style={styles.button}
               onPress={() =>
                 this.props.navigation.navigate("CList", {
-                  next: "VSBeta",
+                  next: "CVS",
                 })
               }
             >

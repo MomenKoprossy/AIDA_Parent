@@ -34,7 +34,7 @@ import * as ImagePicker from "expo-image-picker";
 export default class CreateTaskView extends React.Component {
   state = {
     name: "",
-    data: "",
+    date: "",
     time: "",
     duration: { h: "", m: "" },
     uri:
@@ -244,12 +244,6 @@ export default class CreateTaskView extends React.Component {
       .post(this.url, data, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          var percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          console.log(progressEvent);
         },
       })
       .then((req) => {

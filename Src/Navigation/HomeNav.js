@@ -11,6 +11,8 @@ import ChildAddView from "../ChildAddView";
 import PDFReaderView from "../PDFReaderView";
 import ChildVSView from "../ChildVSView";
 import CreateTaskView from "../CreateTaskView";
+import VSCalendarView from "../VSCalendarView";
+import TaskDetailsView from "../TaskDetailsView";
 
 const DStack = createStackNavigator(
   {
@@ -32,8 +34,9 @@ const DStack = createStackNavigator(
     CList: { screen: ChildListView },
     CAdd: { screen: ChildAddView },
     PDF: { screen: PDFReaderView },
-    CVS: { screen: ChildVSView },
+    CVS: { screen: VSCalendarView },
     TAdd: { screen: CreateTaskView },
+    TDetails: { screen: TaskDetailsView },
   },
   {
     headerMode: "none",

@@ -30,22 +30,68 @@ import axios from "react-native-axios";
 import DatePicker from "react-native-datepicker";
 import Tags from "react-native-tags";
 import * as ImagePicker from "expo-image-picker";
-import { serverURL } from "./utils";
 
-export default class CreateTaskView extends React.Component {
+export default class TaskDetailsView extends React.Component {
   state = {
-    Det: {},
+    Det: this.props.navigation.state.params.info,
     name: null,
-    data: null,
+    date: null,
     time: null,
     duration: { h: "", m: "" },
     uri: null,
-    repeat: "D",
+    repeat: null,
     selected: "",
     picName: "",
     type: "",
   };
-  picurl = serverURL + "get_task_image?task_id=";
+
+  picurl = serverURL + "get_task_image?reduced=1&task_id=";
+  url = serverURL + "modifi_task";
+
+  sendEdit = () => {
+    var data = new FormData();
+    if (this.state.uri != null)
+      data.append("file", {
+        uri: this.state.selected,
+        type: `image/${this.state.type}`,
+        name: this.state.picName,
+      });
+    var edit = {};
+    this.state.name != this.state.Det.name && this.state.name != null
+      ? (edit.name = this.state.name)
+      : null;
+    this.state.date != this.renderDate(this.state.Det.start_date_time) &&
+    this.state.date != null
+      ? (edit.date = this.renderDate(this.state.Det.start_date_time))
+      : null;
+    this.state.time != this.renderTime(this.state.Det.start_date_time) &&
+    this.state.time != null
+      ? (edit.time = this.renderTime(this.state.Det.start_date_time))
+      : null;
+    this.dur != this.prepDuration(this.state.Det.duration) && this.dur != null
+      ? (edit.duration = this.state.duration)
+      : null;
+    this.state.repeat != this.state.Det.repeat && this.state.repeat != null
+      ? (edit.repeat = this.state.repeat)
+      : null;
+    data.append("fields", JSON.stringify(edit));
+    axios
+      .post(this.url, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else JSON.stringify(req.data.success) == "true";
+        alert("Task Edited Successfully");
+        this.props.navigation.goBack();
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   selectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -69,6 +115,11 @@ export default class CreateTaskView extends React.Component {
 
   dur = null;
   tags = [];
+
+  prepDuration(dur) {
+    var temp = JSON.parse(dur);
+    return temp.h + ":" + temp.m;
+  }
 
   prepForServer(str) {
     var part = str.split(":");
@@ -132,7 +183,7 @@ export default class CreateTaskView extends React.Component {
                     editable={true}
                     value={
                       this.state.name == null
-                        ? this.state.name
+                        ? this.state.Det.name
                         : this.state.name
                     }
                     onChangeText={(value) => this.setState({ name: value })}
@@ -190,7 +241,11 @@ export default class CreateTaskView extends React.Component {
                       mode="time"
                       style={{ marginBottom: 15, marginTop: 10 }}
                       placeholder="Select Date"
-                      date={this.dur}
+                      date={
+                        this.dur == null
+                          ? this.prepDuration(this.state.Det.duration)
+                          : this.dur
+                      }
                       confirmBtnText="Confirm"
                       cancelBtnTestID="Cancel"
                       onDateChange={(duration) => {
@@ -207,7 +262,13 @@ export default class CreateTaskView extends React.Component {
                 >
                   <Label>Repetition:</Label>
                   <Picker
-                    selectedValue={this.state.repeat}
+                    selectedValue={
+                      this.state.repeat == null
+                        ? this.state.Det.repeat == "D"
+                          ? "Daily"
+                          : "Monthly"
+                        : this.state.repeat
+                    }
                     mode="dropdown"
                     onValueChange={(value) => this.setState({ repeat: value })}
                   >
@@ -220,6 +281,7 @@ export default class CreateTaskView extends React.Component {
                     Tags:
                   </Label>
                   <Tags
+                    initialTags={this.tags == [] ? this.state.Det.Tags : []}
                     style={styles.input}
                     onChangeTags={(tags) => {
                       //lw 3mlt call l setState msh hyzhr el tags
@@ -236,10 +298,10 @@ export default class CreateTaskView extends React.Component {
                   justifyContent: "center",
                   alignSelf: "center",
                 }}
-                onPress={() => this.addTaskRequest()}
+                onPress={() => this.sendEdit()}
               >
                 <Icon name="add" />
-                <Text>Add Task</Text>
+                <Text>Edit Task</Text>
               </Button>
             </ScrollView>
             <View style={{ paddingBottom: 30 }}></View>
@@ -273,12 +335,6 @@ export default class CreateTaskView extends React.Component {
       .post(this.url, data, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          var percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          console.log(progressEvent);
         },
       })
       .then((req) => {

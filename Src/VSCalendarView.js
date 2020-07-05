@@ -14,16 +14,16 @@ import {
   Thumbnail,
   Right,
   H3,
+  View,
 } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";
 import { serverURL, Theme_color } from "./utils";
-import { RefreshControl } from "react-native";
 import axios from "react-native-axios";
 import Constants from "expo-constants";
+import { Agenda } from "react-native-calendars";
 
-export default class ChildVSView extends React.Component {
-  url = serverURL + "get_all_child_task_data";
-  picurl = serverURL + "get_task_image?task_id=";
+export default class VSCalendarView extends React.Component {
+  url = serverURL + "get_all_tasks_in_timeFrame";
+  picurl = serverURL + "get_task_image?reduced=1&task_id=";
 
   componentDidMount() {
     this.getChildVS(this.props.navigation.state.params.cCode);
@@ -31,32 +31,41 @@ export default class ChildVSView extends React.Component {
 
   getChildVS = (child_code) => {
     axios
-      .post(this.url, { child_id: child_code })
+      .post(this.url, {
+        child_id: child_code,
+        start_date: "2020-07-01",
+        end_date: "2020-07-02",
+      })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false") {
           alert(JSON.stringify(req.data.errors));
           this.setState({ refresh: false });
         } else if (JSON.stringify(req.data.success) == "true") {
-          this.setState({ VS: req.data.result, refresh: false });
-          console.log(this.state.VS);
+          this.setState({
+            VS: this.prepCalendar(req.data.result),
+            refresh: false,
+          });
         }
       })
-      .catch(() => alert("Connection Error"));
+      .catch((error) => {});
   };
 
-  // rewards = () => {
-  //   var temp = [];
-  //   temp = this.state.VS;
-  //   var rewards = 0;
-  //   for (var i = 0; i < temp.length; i++) {
-  //     if (temp[i].state == "done") rewards++;
-  //   }
-  //   return (
-  //     <Text style={{ marginRight: 10, color: "gold" }}>
-  //       {rewards}/{temp.length}
-  //     </Text>
-  //   );
-  // };
+  getDate(date) {
+    var temp = date.split("T");
+    return temp[0];
+  }
+
+  prepCalendar = (shit) => {
+    var vs = shit;
+    var res = {};
+    for (var i = 0; i < vs.length; i++) {
+      var date = this.getDate(vs[i].start_date_time);
+      if (date in res) {
+        res[date].push(vs[i]);
+      } else res[date] = [vs[i]];
+    }
+    return res;
+  };
 
   renderRepeat = (task) => {
     if (task.repeat == null)
@@ -70,7 +79,7 @@ export default class ChildVSView extends React.Component {
         <Body>
           <H3>{task.name}</H3>
           <Text note style={{ color: "black" }}>
-            Repeat: {task.repeat == "D" ? "Daily" : ""}
+            Repeat: {task.repeat == "D" ? "Daily" : "Monthly"}
           </Text>
         </Body>
       );
@@ -82,23 +91,26 @@ export default class ChildVSView extends React.Component {
     return `${temp2[0]}:${temp2[1]}`;
   };
 
-  renderTask = (task, index) => {
+  renderTask = (task) => {
     if (task.state == "missed") {
       return (
         <Card
-          key={index}
           style={{
             marginTop: 10,
             marginRight: 10,
             marginLeft: 10,
           }}
-          onPress={() => {
-            this.props.navigation.navigate("TDetails", {
-              task_id: task.task_id,
-            });
-          }}
         >
-          <CardItem bordered style={{ backgroundColor: "red" }}>
+          <CardItem
+            bordered
+            style={{ backgroundColor: "red" }}
+            button
+            onPress={() => {
+              this.props.navigation.navigate("TDetails", {
+                info: task,
+              });
+            }}
+          >
             <Left>
               <Thumbnail
                 square
@@ -110,6 +122,7 @@ export default class ChildVSView extends React.Component {
             <Right style={{ flexDirection: "column" }}>
               <Text>Start: {this.renderTime(task.start_date_time)}</Text>
               <Text>End: {this.renderTime(task.end_date_time)}</Text>
+              <Text>State: {task.state}</Text>
             </Right>
           </CardItem>
         </Card>
@@ -117,19 +130,22 @@ export default class ChildVSView extends React.Component {
     } else if (task.state == "done") {
       return (
         <Card
-          key={index}
           style={{
             marginTop: 10,
             marginRight: 10,
             marginLeft: 10,
           }}
-          onPress={() => {
-            this.props.navigation.navigate("TDetails", {
-              task_id: task.task_id,
-            });
-          }}
         >
-          <CardItem bordered style={{ backgroundColor: "green" }}>
+          <CardItem
+            bordered
+            style={{ backgroundColor: "green" }}
+            button
+            onPress={() => {
+              this.props.navigation.navigate("TDetails", {
+                info: task,
+              });
+            }}
+          >
             <Left>
               <Thumbnail
                 square
@@ -148,19 +164,21 @@ export default class ChildVSView extends React.Component {
     } else if (task.state == "due" || task.state == "TBD") {
       return (
         <Card
-          key={index}
           style={{
             marginTop: 10,
             marginRight: 10,
             marginLeft: 10,
           }}
-          onPress={() => {
-            this.props.navigation.navigate("TDetails", {
-              task_id: task.task_id,
-            });
-          }}
         >
-          <CardItem bordered>
+          <CardItem
+            bordered
+            onPress={() => {
+              this.props.navigation.navigate("TDetails", {
+                info: task,
+              });
+            }}
+            button
+          >
             <Left>
               <Thumbnail
                 square
@@ -179,19 +197,22 @@ export default class ChildVSView extends React.Component {
     } else if (task.state == "next") {
       return (
         <Card
-          key={index}
           style={{
             marginTop: 10,
             marginRight: 10,
             marginLeft: 10,
           }}
-          onPress={() => {
-            this.props.navigation.navigate("TDetails", {
-              task_id: task.task_id,
-            });
-          }}
         >
-          <CardItem bordered style={{ backgroundColor: "#371796" }}>
+          <CardItem
+            bordered
+            style={{ backgroundColor: "#371796" }}
+            button
+            onPress={() => {
+              this.props.navigation.navigate("TDetails", {
+                info: task,
+              });
+            }}
+          >
             <Left>
               <Thumbnail
                 square
@@ -213,7 +234,7 @@ export default class ChildVSView extends React.Component {
   };
 
   state = {
-    VS: [],
+    VS: {},
     refresh: true,
   };
 
@@ -244,7 +265,31 @@ export default class ChildVSView extends React.Component {
             </Button>
           </Right>
         </Header>
-        <Content
+        <Agenda
+          items={this.state.VS}
+          renderItem={this.state.VS}
+          renderEmptyData={() => {
+            return <View />;
+          }}
+          pastScrollRange={1}
+          futureScrollRange={3}
+          renderItem={(item) => this.renderTask(item)}
+          minDate={"2020-07-01"}
+          theme={{
+            agendaDayTextColor: Theme_color,
+            agendaDayNumColor: Theme_color,
+            agendaTodayColor: Theme_color,
+            agendaKnobColor: Theme_color,
+            textSectionTitleDisabledColor: Theme_color,
+            selectedDayBackgroundColor: Theme_color,
+            dotColor: Theme_color,
+          }}
+          onRefresh={() => {
+            this.getChildVS(this.props.navigation.state.params.cCode);
+          }}
+        />
+
+        {/* <Content
           refreshControl={
             <RefreshControl
               refreshing={this.state.refresh}
@@ -255,11 +300,11 @@ export default class ChildVSView extends React.Component {
           }
         >
           <ScrollView>
-            {(this.state.VS || []).map((task, index) =>
-              this.renderTask(task, index)
+            {(this.state.VS || []).map((task, ) =>
+              this.renderTask(task, )
             )}
           </ScrollView>
-        </Content>
+        </Content> */}
       </Container>
     );
   }
