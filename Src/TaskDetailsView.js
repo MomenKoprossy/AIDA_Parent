@@ -30,6 +30,7 @@ import axios from "react-native-axios";
 import DatePicker from "react-native-datepicker";
 import Tags from "react-native-tags";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 
 export default class TaskDetailsView extends React.Component {
   state = {
@@ -43,10 +44,56 @@ export default class TaskDetailsView extends React.Component {
     selected: "",
     picName: "",
     type: "",
+    NewCCode: "",
   };
 
   picurl = serverURL + "get_task_image?reduced=1&task_id=";
-  url = serverURL + "modifi_task";
+  url = serverURL + "modify_task";
+  rmurl = serverURL + "remove_task";
+  cloneurl = serverURL + "add_task";
+
+  cloneTaskRequest = () => {
+    var data = new FormData();
+    FileSystem.downloadAsync(
+      serverURL + "get_task_image?task_id=" + this.state.Det.task_id
+    ).then((uri) => {
+      var parts = uri.split("/");
+      var type = uri.split(".");
+      data.append("file", {
+        uri: uri,
+        type: `image/${type[type.length - 1]}`,
+        name: parts[parts.length - 1],
+      });
+    });
+    var fields = {
+      date: this.renderDate(this.state.Det.start_date_time),
+      time: this.renderTime(this.state.Det.start_date_time),
+      duration: JSON.parse(this.state.Det.duration),
+      child_id: this.state.NewCCode,
+      name: this.state.Det.name,
+      public_tags: this.state.Det.tags,
+      repeat: this.state.Det.repeat,
+    };
+    data.append("fields", JSON.stringify(fields));
+    console.log(data);
+
+    axios
+      .post(this.url, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else JSON.stringify(req.data.success) == "true";
+        alert("Task Cloned Successfully!");
+        this.props.navigation.goBack();
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   sendEdit = () => {
     var data = new FormData();
@@ -57,16 +104,17 @@ export default class TaskDetailsView extends React.Component {
         name: this.state.picName,
       });
     var edit = {};
+    edit.task_id = this.state.Det.task_id;
     this.state.name != this.state.Det.name && this.state.name != null
       ? (edit.name = this.state.name)
       : null;
     this.state.date != this.renderDate(this.state.Det.start_date_time) &&
     this.state.date != null
-      ? (edit.date = this.renderDate(this.state.Det.start_date_time))
+      ? (edit.date = this.state.date)
       : null;
     this.state.time != this.renderTime(this.state.Det.start_date_time) &&
     this.state.time != null
-      ? (edit.time = this.renderTime(this.state.Det.start_date_time))
+      ? (edit.time = this.state.time)
       : null;
     this.dur != this.prepDuration(this.state.Det.duration) && this.dur != null
       ? (edit.duration = this.state.duration)
@@ -91,6 +139,20 @@ export default class TaskDetailsView extends React.Component {
       .catch((error) => {
         alert(error);
       });
+  };
+
+  removeRequest = () => {
+    axios
+      .post(this.rmurl, { task_id: this.state.Det.task_id })
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          alert("Task Removed Successfully");
+          this.props.navigation.goBack();
+        }
+      })
+      .catch(() => alert("Connection Error"));
   };
 
   selectImage = async () => {
@@ -302,6 +364,36 @@ export default class TaskDetailsView extends React.Component {
               >
                 <Icon name="add" />
                 <Text>Edit Task</Text>
+              </Button>
+              <Button
+                style={{
+                  backgroundColor: Theme_color,
+                  marginTop: 20,
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+                onPress={() => {
+                  this.props.navigation.navigate("CList", {
+                    Det: this.state.Det,
+                  });
+                }}
+              >
+                <Icon name="copy" />
+                <Text>Clone To Child</Text>
+              </Button>
+              <Button
+                danger
+                style={{
+                  marginTop: 20,
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+                onPress={() => this.removeRequest()}
+              >
+                <Icon name="close" />
+                <Text>Remove Task</Text>
               </Button>
             </ScrollView>
             <View style={{ paddingBottom: 30 }}></View>

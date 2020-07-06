@@ -5,7 +5,6 @@ import {
   Body,
   Button,
   Title,
-  Content,
   Card,
   CardItem,
   Text,
@@ -33,8 +32,8 @@ export default class VSCalendarView extends React.Component {
     axios
       .post(this.url, {
         child_id: child_code,
-        start_date: "2020-07-01",
-        end_date: "2020-07-02",
+        start_date: "2020-07-06",
+        end_date: "2020-07-06",
       })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false") {
