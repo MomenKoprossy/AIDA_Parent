@@ -141,9 +141,12 @@ export default class TaskDetailsView extends React.Component {
       });
   };
 
-  removeRequest = () => {
+  removeRequest = (deletion_type) => {
     axios
-      .post(this.rmurl, { task_id: this.state.Det.task_id })
+      .post(this.rmurl, {
+        task_id: this.state.Det.task_id,
+        deletion_type: deletion_type,
+      })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
@@ -390,10 +393,23 @@ export default class TaskDetailsView extends React.Component {
                   justifyContent: "center",
                   alignSelf: "center",
                 }}
-                onPress={() => this.removeRequest()}
+                onPress={() => this.removeRequest(0)}
               >
                 <Icon name="close" />
-                <Text>Remove Task</Text>
+                <Text>Remove This Time Only</Text>
+              </Button>
+              <Button
+                danger
+                style={{
+                  marginTop: 20,
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+                onPress={() => this.removeRequest(1)}
+              >
+                <Icon name="close" />
+                <Text>Remove All Repetition</Text>
               </Button>
             </ScrollView>
             <View style={{ paddingBottom: 30 }}></View>
