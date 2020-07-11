@@ -28,9 +28,9 @@ import { Input } from "galio-framework";
 import { serverURL, Theme_color } from "./utils";
 import axios from "react-native-axios";
 import DatePicker from "react-native-datepicker";
-import Tags from "react-native-tags";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import AutoTags from "react-native-tag-autocomplete";
 
 export default class TaskDetailsView extends React.Component {
   state = {
@@ -45,12 +45,97 @@ export default class TaskDetailsView extends React.Component {
     picName: "",
     type: "",
     NewCCode: "",
+    tagsSelected: [],
+    suggestions: [],
   };
 
+  componentDidMount() {
+    this.loadSuggestions();
+    this.detTag = this.renderTags();
+    console.log(this.detTag);
+  }
+
+  detTag = null;
   picurl = serverURL + "get_task_image?reduced=1&task_id=";
   url = serverURL + "modify_task";
   rmurl = serverURL + "remove_task";
   cloneurl = serverURL + "add_task";
+  createTagurl = serverURL + "add_tag";
+  suggurl = serverURL + "search_tag";
+
+  renderTags = () => {
+    var pub = this.state.Det.public_tags;
+    var pri = this.state.Det.private_tags;
+    var res = [];
+    if (pub != null) {
+      var pub2 = [];
+      for (var i = 0; i < pub.length; i++)
+        pub2 = pub2.concat(JSON.parse(pub[i]));
+      for (var i = 0; i < pub2.length; i++) {
+        res = res.concat(pub2[i]);
+      }
+    }
+    if (pri != null) {
+      var pri2 = [];
+      for (var i = 0; i < pri.length; i++)
+        pri2 = pri2.concat(JSON.parse(pri[i]));
+
+      for (var i = 0; i < pri2.length; i++) {
+        res = res.concat(pri2[i]);
+      }
+    }
+    this.setState({ tagsSelected: this.state.tagsSelected.concat(res) });
+    return res;
+  };
+
+  handleDelete = (index) => {
+    let tagsSelected = this.state.tagsSelected;
+    tagsSelected.splice(index, 1);
+    this.setState({ tagsSelected });
+  };
+
+  handleAddition = (suggestion) => {
+    this.setState({
+      tagsSelected: this.state.tagsSelected.concat(suggestion),
+    });
+  };
+
+  loadSuggestions = () => {
+    axios
+      .post(this.suggurl)
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else JSON.stringify(req.data.success) == "true";
+        {
+          this.setState({ suggestions: req.data.result });
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  createTag = (input) => {
+    axios
+      .post(this.createTagurl, { name: input })
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false")
+          alert(JSON.stringify(req.data.errors));
+        else if (JSON.stringify(req.data.success) == "true") {
+          this.loadSuggestions();
+          setTimeout(() => {
+            var temp = this.state.suggestions;
+            for (var i = 0; i < temp.length; i++) {
+              if (temp[i].name == input) this.handleAddition(temp[i]);
+            }
+          }, 1000);
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   cloneTaskRequest = () => {
     var data = new FormData();
@@ -95,7 +180,19 @@ export default class TaskDetailsView extends React.Component {
       });
   };
 
-  sendEdit = () => {
+  prepTags = (type) => {
+    var temp = this.state.tagsSelected;
+    var pub = [];
+    var pri = [];
+    for (var i = 0; i < temp.length; i++) {
+      if (temp[i].tag_type == "public") pub = pub.concat(temp[i].tag_id);
+      else if (temp[i].tag_type == "private") pri = pri.concat(temp[i].tag_id);
+    }
+    if (type == "public") return pub;
+    else if (type == "private") return pri;
+  };
+
+  sendEdit = (edit_type) => {
     var data = new FormData();
     if (this.state.uri != null)
       data.append("file", {
@@ -122,6 +219,14 @@ export default class TaskDetailsView extends React.Component {
     this.state.repeat != this.state.Det.repeat && this.state.repeat != null
       ? (edit.repeat = this.state.repeat)
       : null;
+    if (this.state.tagsSelected != this.detTag) {
+      edit.public_tags = this.prepTags("public");
+      edit.private_tags = this.prepTags("private");
+    }
+    edit.edit_type = edit_type;
+
+    console.log(edit);
+
     data.append("fields", JSON.stringify(edit));
     axios
       .post(this.url, data, {
@@ -142,11 +247,13 @@ export default class TaskDetailsView extends React.Component {
   };
 
   removeRequest = (deletion_type) => {
+    var rem = {};
+    if (deletion_type == 1) {
+      rem.date_time = this.state.Det.start_date_time;
+    }
+    rem.task_id = this.state.Det.task_id;
     axios
-      .post(this.rmurl, {
-        task_id: this.state.Det.task_id,
-        deletion_type: deletion_type,
-      })
+      .post(this.rmurl, rem)
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false")
           alert(JSON.stringify(req.data.errors));
@@ -155,7 +262,7 @@ export default class TaskDetailsView extends React.Component {
           this.props.navigation.goBack();
         }
       })
-      .catch(() => alert("Connection Error"));
+      .catch((error) => alert(error));
   };
 
   selectImage = async () => {
@@ -179,7 +286,6 @@ export default class TaskDetailsView extends React.Component {
   };
 
   dur = null;
-  tags = [];
 
   prepDuration(dur) {
     var temp = JSON.parse(dur);
@@ -330,12 +436,14 @@ export default class TaskDetailsView extends React.Component {
                     selectedValue={
                       this.state.repeat == null
                         ? this.state.Det.repeat == "D"
-                          ? "Daily"
-                          : "Monthly"
+                          ? "D"
+                          : "M"
                         : this.state.repeat
                     }
                     mode="dropdown"
-                    onValueChange={(value) => this.setState({ repeat: value })}
+                    onValueChange={(value) => {
+                      this.setState({ repeat: value });
+                    }}
                   >
                     <Picker.Item label="Daily" value="D" />
                     <Picker.Item label="Monthly" value="M" />
@@ -345,13 +453,18 @@ export default class TaskDetailsView extends React.Component {
                   <Label style={{ marginBottom: 15, marginTop: 10 }}>
                     Tags:
                   </Label>
-                  <Tags
-                    initialTags={this.tags == [] ? this.state.Det.Tags : []}
+                  <AutoTags
+                    autoFocus={false}
+                    suggestions={this.state.suggestions}
+                    tagsSelected={this.state.tagsSelected}
+                    handleAddition={this.handleAddition}
+                    handleDelete={this.handleDelete}
+                    placeholder="Add Tags"
                     style={styles.input}
-                    onChangeTags={(tags) => {
-                      //lw 3mlt call l setState msh hyzhr el tags
-                      this.tags = tags;
+                    onCustomTagCreated={(input) => {
+                      this.createTag(input);
                     }}
+                    createTagOnSpace={true}
                   />
                 </Item>
               </Form>
@@ -363,10 +476,38 @@ export default class TaskDetailsView extends React.Component {
                   justifyContent: "center",
                   alignSelf: "center",
                 }}
-                onPress={() => this.sendEdit()}
+                onPress={() => this.sendEdit(0)}
               >
-                <Icon name="add" />
-                <Text>Edit Task</Text>
+                <Icon name="create" />
+                <Text>Edit This Task only</Text>
+              </Button>
+              <Button
+                style={{
+                  marginTop: 20,
+
+                  backgroundColor: Theme_color,
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+                onPress={() => this.sendEdit(1)}
+              >
+                <Icon name="create" />
+                <Text>Edit all after this</Text>
+              </Button>
+              <Button
+                style={{
+                  marginTop: 20,
+
+                  backgroundColor: Theme_color,
+                  width: "60%",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+                onPress={() => this.sendEdit(2)}
+              >
+                <Icon name="create" />
+                <Text>Edit all instances</Text>
               </Button>
               <Button
                 style={{

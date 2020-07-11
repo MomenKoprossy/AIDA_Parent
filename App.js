@@ -18,6 +18,7 @@ import CreateTaskView from "./Src/CreateTaskView";
 import { Theme_color } from "./Src/utils";
 
 const SignoutScreen = () => {};
+console.disableYellowBox = true;
 
 const AppDrawer = createBottomTabNavigator(
   {

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, AsyncStorage } from "react-native";
+import { StyleSheet, AsyncStorage, TouchableOpacity } from "react-native";
 import {
   Container,
   Button,
@@ -8,7 +8,6 @@ import {
   Body,
   Title,
   Left,
-  Icon,
   Right,
   Content,
   Card,
@@ -74,9 +73,7 @@ export default class GetStartedView extends React.Component {
                     <H3 style={{ fontWeight: "bold", color: Theme_color }}>
                       Diagnosis
                     </H3>
-                    <Text note>
-                      through Questionnaire and Video Analysis.
-                    </Text>
+                    <Text note>through Questionnaire and Video Analysis.</Text>
                   </Body>
                 </Left>
               </CardItem>
@@ -89,9 +86,7 @@ export default class GetStartedView extends React.Component {
                     <H3 style={{ fontWeight: "bold", color: Theme_color }}>
                       Assistance (AIDA Child)
                     </H3>
-                    <Text note>
-                      Social Stories, Visual Schedules and AAC.
-                    </Text>
+                    <Text note>Social Stories, Visual Schedules and AAC.</Text>
                   </Body>
                 </Left>
               </CardItem>

@@ -19,21 +19,62 @@ import { serverURL, Theme_color } from "./utils";
 import axios from "react-native-axios";
 import Constants from "expo-constants";
 import { Agenda } from "react-native-calendars";
+import Tags from "react-native-tags";
+import PickerCheckBox from "react-native-picker-checkbox";
 
 export default class VSCalendarView extends React.Component {
   url = serverURL + "get_all_tasks_in_timeFrame";
   picurl = serverURL + "get_task_image?reduced=1&task_id=";
+  tagurl = serverURL + "get_all_parent_tag_data";
 
   componentDidMount() {
-    this.getChildVS(this.props.navigation.state.params.cCode);
+    var toki = this.getDateRange();
+    var temp = toki.split("/");
+    this.getChildVS(this.props.navigation.state.params.cCode, temp[0], temp[1]);
+    this.getTags();
   }
 
-  getChildVS = (child_code) => {
+  getDateRange = () => {
+    var ddd = new Date();
+    var now = new Date().toISOString();
+    var then = new Date(ddd.setMonth(ddd.getMonth() + 1)).toISOString();
+    var d = now.split("-");
+    var t = then.split("-");
+    return `${d[0]}-${d[1]}/${t[0]}-${t[1]}`;
+  };
+
+  prepFilterTags = (tags) => {
+    var pub = tags.public_tags;
+    var pri = tags.private_tags;
+    var res = [];
+    if (pub != null)
+      for (var i = 0; i < pub.length; i++) res = res.concat(pub[i]);
+    if (pri != null)
+      for (var i = 0; i < pri.length; i++) res = res.concat(pri[i]);
+    return res;
+  };
+
+  getTags = () => {
+    axios
+      .post(this.tagurl)
+      .then((req) => {
+        if (JSON.stringify(req.data.success) == "false") {
+          alert(JSON.stringify(req.data.errors));
+        } else if (JSON.stringify(req.data.success) == "true") {
+          this.setState({
+            tags: this.prepFilterTags(req.data.result),
+          });
+        }
+      })
+      .catch((error) => {});
+  };
+
+  getChildVS = (child_code, sdate, edate) => {
     axios
       .post(this.url, {
         child_id: child_code,
-        start_date: "2020-07-06",
-        end_date: "2020-07-06",
+        start_date: sdate,
+        end_date: edate,
       })
       .then((req) => {
         if (JSON.stringify(req.data.success) == "false") {
@@ -42,6 +83,7 @@ export default class VSCalendarView extends React.Component {
         } else if (JSON.stringify(req.data.success) == "true") {
           this.setState({
             VS: this.prepCalendar(req.data.result),
+            VSRAW: req.data.result,
             refresh: false,
           });
         }
@@ -90,6 +132,48 @@ export default class VSCalendarView extends React.Component {
     return `${temp2[0]}:${temp2[1]}`;
   };
 
+  renderTags = (pub, pri) => {
+    var res = [];
+    if (pub != null) {
+      var pub2 = [];
+      for (var i = 0; i < pub.length; i++)
+        pub2 = pub2.concat(JSON.parse(pub[i]));
+      for (var i = 0; i < pub2.length; i++) {
+        res = res.concat(pub2[i].name);
+      }
+    }
+    if (pri != null) {
+      var pri2 = [];
+      for (var i = 0; i < pri.length; i++)
+        pri2 = pri2.concat(JSON.parse(pri[i]));
+
+      for (var i = 0; i < pri2.length; i++) {
+        res = res.concat(pri2[i].name);
+      }
+    }
+    return res;
+  };
+
+  handleConfirm(pItems) {
+    var temp = "Viewing: ";
+    var arr2 = [];
+    for (var i = 0; i < pItems.length; i++) {
+      temp += pItems[i].name + "  ";
+      arr2 = arr2.concat(pItems[i].name);
+      this.setState({ itemc: temp });
+    }
+    var v = this.state.VSRAW;
+    var res = [];
+    for (var j = 0; j < v.length; j++) {
+      var arr1 = this.renderTags(v[j].public_tags, v[j].private_tags);
+      if (arr1.some((r) => arr2.includes(r))) {
+        res = res.concat(v[j]);
+      }
+    }
+    //console.log(res);
+    this.setState({ VS: this.prepCalendar(res) });
+  }
+
   renderTask = (task) => {
     if (task.state == "missed") {
       return (
@@ -123,6 +207,14 @@ export default class VSCalendarView extends React.Component {
               <Text>End: {this.renderTime(task.end_date_time)}</Text>
               <Text>State: {task.state}</Text>
             </Right>
+          </CardItem>
+          <CardItem bordered style={{ backgroundColor: "red" }}>
+            <Tags
+              readonly={true}
+              initialTags={this.renderTags(task.public_tags, task.private_tags)}
+              containerStyle={{ justifyContent: "center" }}
+              deleteTagOnPress={false}
+            />
           </CardItem>
         </Card>
       );
@@ -158,6 +250,14 @@ export default class VSCalendarView extends React.Component {
               <Text>End: {this.renderTime(task.end_date_time)}</Text>
             </Right>
           </CardItem>
+          <CardItem bordered style={{ backgroundColor: "green" }}>
+            <Tags
+              readonly={true}
+              initialTags={this.renderTags(task.public_tags, task.private_tags)}
+              containerStyle={{ justifyContent: "center" }}
+              deleteTagOnPress={false}
+            />
+          </CardItem>
         </Card>
       );
     } else if (task.state == "due" || task.state == "TBD") {
@@ -190,6 +290,14 @@ export default class VSCalendarView extends React.Component {
               <Text>Start: {this.renderTime(task.start_date_time)}</Text>
               <Text>End: {this.renderTime(task.end_date_time)}</Text>
             </Right>
+          </CardItem>
+          <CardItem bordered>
+            <Tags
+              readonly={true}
+              initialTags={this.renderTags(task.public_tags, task.private_tags)}
+              containerStyle={{ justifyContent: "center" }}
+              deleteTagOnPress={false}
+            />
           </CardItem>
         </Card>
       );
@@ -227,6 +335,14 @@ export default class VSCalendarView extends React.Component {
               <Text>End: {this.renderTime(task.end_date_time)}</Text>
             </Right>
           </CardItem>
+          <CardItem bordered style={{ backgroundColor: "#371796" }}>
+            <Tags
+              readonly={true}
+              initialTags={this.renderTags(task.public_tags, task.private_tags)}
+              containerStyle={{ justifyContent: "center" }}
+              deleteTagOnPress={false}
+            />
+          </CardItem>
         </Card>
       );
     }
@@ -235,6 +351,9 @@ export default class VSCalendarView extends React.Component {
   state = {
     VS: {},
     refresh: true,
+    tags: [],
+    itemc: "",
+    VSRAW: [],
   };
 
   render() {
@@ -264,14 +383,35 @@ export default class VSCalendarView extends React.Component {
             </Button>
           </Right>
         </Header>
+        <PickerCheckBox
+          data={this.state.tags}
+          headerComponent={<Text style={{ fontSize: 25 }}>Tags</Text>}
+          OnConfirm={(pItems) => this.handleConfirm(pItems)}
+          ConfirmButtonTitle="Filter"
+          DescriptionField="name"
+          KeyField="tag_id"
+          placeholder="Filter By Tag"
+          arrowColor={Theme_color}
+          arrowSize={30}
+          placeholderSelectedItems={this.state.itemc}
+        />
         <Agenda
+          onDayPress={(d) => {
+            var m = new Date().getMonth() + 1;
+            var y = new Date().getUTCFullYear();
+            if (d.month != m || d.year != y) {
+              var s = `${d.year}-${d.month}`;
+              var e = `${d.year}-${d.month + 1}`;
+              this.getChildVS(this.props.navigation.state.params.cCode, s, e);
+            }
+          }}
           items={this.state.VS}
           renderItem={this.state.VS}
           renderEmptyData={() => {
             return <View />;
           }}
-          pastScrollRange={1}
-          futureScrollRange={3}
+          pastScrollRange={5}
+          futureScrollRange={10}
           renderItem={(item) => this.renderTask(item)}
           minDate={"2020-07-01"}
           theme={{
@@ -284,26 +424,14 @@ export default class VSCalendarView extends React.Component {
             dotColor: Theme_color,
           }}
           onRefresh={() => {
-            this.getChildVS(this.props.navigation.state.params.cCode);
+            var temp = this.getDateRange().split("/");
+            this.getChildVS(
+              this.props.navigation.state.params.cCode,
+              temp[0],
+              temp[1]
+            );
           }}
         />
-
-        {/* <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refresh}
-              onRefresh={() =>
-                this.getChildVS(this.props.navigation.state.params.cCode)
-              }
-            />
-          }
-        >
-          <ScrollView>
-            {(this.state.VS || []).map((task, ) =>
-              this.renderTask(task, )
-            )}
-          </ScrollView>
-        </Content> */}
       </Container>
     );
   }
