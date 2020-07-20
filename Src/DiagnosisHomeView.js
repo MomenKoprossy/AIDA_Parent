@@ -30,7 +30,7 @@ export default class DiagnosisHomeView extends React.Component {
     reqs: [],
   };
 
-  url = serverURL + "get_all_questionaire_data";
+  url = serverURL + "get_all_questionnaire_data";
   pdfurl = serverURL + "get_questionaire_report_pdf_app/";
 
   componentDidMount() {
@@ -78,7 +78,7 @@ export default class DiagnosisHomeView extends React.Component {
           this.setState({ reqs: req.data.result, refresh: false });
         }
       })
-      .catch(() => alert("Connection Error"));
+      .catch((error) => alert(error));
   };
 
   //klaby
@@ -166,7 +166,7 @@ export default class DiagnosisHomeView extends React.Component {
                   button
                   onPress={() => this.getReport(Req.questionaire_id)}
                 >
-                  <Text>Request No.{Req.questionaire_id}</Text>
+                  <Text>Request for Child: {Req.first_name}</Text>
                 </CardItem>
                 <CardItem bordered>
                   <Body>

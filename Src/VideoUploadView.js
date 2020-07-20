@@ -156,11 +156,22 @@ export default class VideoUploadView extends React.Component {
           <Card>
             <CardItem>
               <Text>
-                1. The video should be less than 3 min and not more than 10 min{" "}
-              </Text>
+                1. The care giver should be at least 18 years old and the child to be between 12 months and 17 years</Text>
             </CardItem>
             <CardItem>
-              <Text>2. The video shouldnt exceed the size limit of 200MB</Text>
+              <Text>2. The video to be between 3 minutes and 6 minutes</Text>
+            </CardItem>
+            <CardItem>
+              <Text>3. The video shouldnt exceed the size limit of 200MB</Text>
+            </CardItem>
+            <CardItem>
+              <Text>4. Showed the face and hands of the child</Text>
+            </CardItem>
+            <CardItem>
+              <Text>5. Shows clear opportunities for direct social engagement</Text>
+            </CardItem>
+            <CardItem>
+              <Text>6. Involved opportunities for the use of an object such as utensil, crayon or toy</Text>
             </CardItem>
           </Card>
           {this.uploadButtons()}

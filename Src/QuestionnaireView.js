@@ -27,7 +27,7 @@ export default class QuestionnaireView extends React.Component {
     Submit: ["", "", "", "", "", "", "", "", "", ""]
   };
 
-  url = serverURL + "submit_questionaire";
+  url = serverURL + "submit_questionnaire";
 
   submitQues = () => {
     axios
@@ -243,7 +243,7 @@ export default class QuestionnaireView extends React.Component {
     );
   }
   Select = (index, selected) => {
-    tempArray = this.state.Submit;
+    var tempArray = this.state.Submit;
     tempArray[index] = selected;
     this.setState({ Submit: tempArray });
   };

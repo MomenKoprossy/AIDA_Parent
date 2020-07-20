@@ -91,9 +91,19 @@ export default class VSCalendarView extends React.Component {
       .catch((error) => {});
   };
 
+  appendLeadingZeroes(n) {
+    if (n <= 9) {
+      return "0" + n;
+    }
+    return n;
+  }
+
   getDate(date) {
-    var temp = date.split("T");
-    return temp[0];
+    var temp = new Date(date);
+    var rs = `${temp.getFullYear()}-${this.appendLeadingZeroes(
+      temp.getMonth() + 1
+    )}-${this.appendLeadingZeroes(temp.getDate())}`;
+    return rs;
   }
 
   prepCalendar = (shit) => {
@@ -127,9 +137,10 @@ export default class VSCalendarView extends React.Component {
   };
 
   renderTime = (time) => {
-    var temp = time.split("T");
-    var temp2 = temp[1].split(":");
-    return `${temp2[0]}:${temp2[1]}`;
+    var temp = new Date(time);
+    return `${this.appendLeadingZeroes(
+      temp.getHours()
+    )}:${this.appendLeadingZeroes(temp.getMinutes())}`;
   };
 
   renderTags = (pub, pri) => {
