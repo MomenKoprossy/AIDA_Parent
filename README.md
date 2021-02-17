@@ -1,2 +1,3 @@
 # AIDA_Parent
-AIDA Parent APP
+AIDA Parent for guardians of ASD children 
+Graduation Project
